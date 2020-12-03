@@ -32,8 +32,9 @@ int main (int argc, char **argv)
    int i;
    
    for( i = 0; i < NUM_THREADS; i++ ) {
-      cout << "main() : creating thread, " << i << endl;
+      cout << "main() : creating producer thread, " << i << endl;
       rc = pthread_create(&threads[i], NULL, producer, (void *)i);
+      pthread_create(&threads[i], NULL, consumer, (void *)i);
    }
 
    pthread_exit(NULL);
