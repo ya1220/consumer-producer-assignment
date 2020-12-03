@@ -8,10 +8,38 @@
 void *producer (void *id);
 void *consumer (void *id);
 
+//////////////////////////////////////////////
+
+void *PrintHello(void *threadid) {
+   long tid;
+   tid = (long)threadid;
+   cout << "Hello World! Thread ID, " << tid << endl;
+   pthread_exit(NULL);
+}
+
+//////////////////////////////////////////////
+
 int main (int argc, char **argv)
 {
 
   // TODO
+
+//////////////////////////////////////////////
+
+   const int NUM_THREADS = 3;
+
+   pthread_t threads[NUM_THREADS];
+   int rc;
+   int i;
+   
+   for( i = 0; i < NUM_THREADS; i++ ) {
+      cout << "main() : creating thread, " << i << endl;
+      rc = pthread_create(&threads[i], NULL, PrintHello, (void *)i);
+   }
+   
+   pthread_exit(NULL);
+
+//////////////////////////////////////////////
 
   pthread_t producerid;
   int parameter = 5;
