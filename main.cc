@@ -25,8 +25,7 @@ int main (int argc, char **argv)
   // TODO
 
 //////////////////////////////////////////////
-
-   const int NUM_THREADS = 3;
+   const int NUM_THREADS = 7;
 
    pthread_t threads[NUM_THREADS];
    int rc;
@@ -34,11 +33,10 @@ int main (int argc, char **argv)
    
    for( i = 0; i < NUM_THREADS; i++ ) {
       cout << "main() : creating thread, " << i << endl;
-      rc = pthread_create(&threads[i], NULL, PrintHello, (void *)i);
+      rc = pthread_create(&threads[i], NULL, producer, (void *)i);
    }
-   
-   pthread_exit(NULL);
 
+   pthread_exit(NULL);
 //////////////////////////////////////////////
 
   pthread_t producerid;
