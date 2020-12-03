@@ -24,6 +24,15 @@ int main (int argc, char **argv)
   // TODO
 
 //////////////////////////////////////////////
+
+// sem_t empty, full;
+
+//sem_init(&empty, SHARED, 1);
+//sem_init(&full, SHARED, 0);
+//sem_init(&sm,SHARED,1);
+
+    sem_t empty, full,sm;
+
    const int NUM_THREADS = 7;
 
    pthread_t consumer_threads[NUM_THREADS];
@@ -35,7 +44,7 @@ int main (int argc, char **argv)
    
    for(i = 0; i < NUM_THREADS; i++ ) {
       cout << "main() : creating thread, " << i << endl;
-      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i);
+      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i); // 
       r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)i);
       cout << "main() : successfully created both consumer and producer, " << endl << endl;
    }
@@ -77,5 +86,4 @@ void *consumer (void *id)
     cout << "\nentered consumer!!!";
 
   pthread_exit (0);
-
 }
