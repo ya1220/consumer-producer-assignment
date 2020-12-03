@@ -56,7 +56,7 @@ int main (int argc, char **argv)
 
 void *producer (void *parameter) 
 {
-  cout << "entered producer!!!";
+  cout << "\nentered producer!!!";
   // TODO
 
   int *param = (int *) parameter;
