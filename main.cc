@@ -27,14 +27,16 @@ int main (int argc, char **argv)
 //////////////////////////////////////////////
    const int NUM_THREADS = 7;
 
-   pthread_t threads[NUM_THREADS];
-   int rc;
+   pthread_t consumer_threads[NUM_THREADS];
+   pthread_t producer_threads[NUM_THREADS];
+   
+   int r_p,r_c;
    int i;
    
    for( i = 0; i < NUM_THREADS; i++ ) {
       cout << "main() : creating producer thread, " << i << endl;
-      rc = pthread_create(&threads[i], NULL, producer, (void *)i);
-      pthread_create(&threads[i], NULL, consumer, (void *)i);
+      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i);
+      r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)i);
    }
 
    pthread_exit(NULL);
@@ -54,7 +56,7 @@ int main (int argc, char **argv)
 
 void *producer (void *parameter) 
 {
-
+  cout << "entered producer!!!";
   // TODO
 
   int *param = (int *) parameter;
@@ -71,6 +73,7 @@ void *producer (void *parameter)
 void *consumer (void *id) 
 {
     // TODO 
+    cout << "entered consumer!!!";
 
   pthread_exit (0);
 
