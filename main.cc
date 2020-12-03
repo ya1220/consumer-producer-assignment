@@ -30,7 +30,8 @@ int main (int argc, char **argv)
    pthread_t consumer_threads[NUM_THREADS];
    pthread_t producer_threads[NUM_THREADS];
    
-   int r_p,r_c;
+   int r_p;
+   int r_c;
    int i;
    
    for( i = 0; i < NUM_THREADS; i++ ) {
