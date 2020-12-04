@@ -19,19 +19,32 @@ void *PrintHello(void *threadid) {
 
 //////////////////////////////////////////////
 
-int main (int argc, char **argv)
+int main (int argc = 5, char **argv)
 {
   // TODO
+
+/*
+
+argv[1] = queue_size
+argv[2] = number_of_jobs_for_each_producer
+argv[3] = number_of_producers
+argv[4] = number_of_consumers
+
+size of the queue, number of jobs to generate for
+each producer (each producer will generate the same number of jobs), number of producers,
+and number of consumers.
+
+*/
+
 
 //////////////////////////////////////////////
 
 // sem_t empty, full;
+// sem_init(&empty, SHARED, 1);
+// sem_init(&full, SHARED, 0);
+// sem_init(&sm,SHARED,1);
 
-//sem_init(&empty, SHARED, 1);
-//sem_init(&full, SHARED, 0);
-//sem_init(&sm,SHARED,1);
-
-    sem_t empty, full,sm;
+   sem_t empty, full,sm;
 
    const int NUM_THREADS = 7;
 
@@ -44,7 +57,7 @@ int main (int argc, char **argv)
    
    for(i = 0; i < NUM_THREADS; i++ ) {
       cout << "main() : creating thread, " << i << endl;
-      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i); // 
+      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i); // MISSING ARGUMENT 
       r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)i);
       cout << "main() : successfully created both consumer and producer, " << endl << endl;
    }
