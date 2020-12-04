@@ -92,8 +92,8 @@ and number of consumers.
 
 // what does this do?
    for(i = 0; i < NUM_THREADS; i++ ) {
-      pthread_join(&consumer_threads[i],NULL); // Line 7
-      pthread_join(&producer_threads[i],NULL); // Line 8
+      pthread_join(consumer_threads[i],NULL); // Line 7
+      pthread_join(producer_threads[i],NULL); // Line 8
    }
 
 
