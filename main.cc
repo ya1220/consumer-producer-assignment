@@ -34,10 +34,10 @@ int number_of_jobs_for_each_producer;
 int number_of_producers;
 int number_of_consumers;
 
-argv[1] = queue_size;
-argv[2] = number_of_jobs_for_each_producer;
-argv[3] = number_of_producers;
-argv[4] = number_of_consumers;
+queue_size = argv[1];
+number_of_jobs_for_each_producer = argv[2]
+number_of_producers = argv[3];
+number_of_consumers = argv[4];
 
 /*
 size of the queue, number of jobs to generate for
