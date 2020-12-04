@@ -24,6 +24,7 @@
 #include <queue>
 #include <semaphore.h>
 #include <cstdlib>
+#include <fstream>
 
 void *producer (void *id);
 void *consumer (void *id);
@@ -136,6 +137,10 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     job J = job(job_id,job_duration);
     // sleep not always?
     sleep(sleep_time); 
+
+    //this_thread::sleep_for(std::chrono::milliseconds(600));
+    //sem.wait( 3 );
+    
     // change exit condition
     
     down(empty_count);
@@ -145,12 +150,14 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     
     up(queue_access_mutex);
     up(full_count);
-  }
-
+    
 // (c) Print the status (example format given in example output.txt).
 std::ofstream ofs("output2.txt", std::ofstream::out);
 ofs << "writing job id = " << job_id;
 ofs.close();
+  }
+
+
 
   pthread_exit(0);
 }
