@@ -29,11 +29,15 @@ void *producer (void *id);
 void *consumer (void *id);
 
 struct job{
+  job(int id, int t) : job_id(id),(execution_time) {}
+
   int job_id;
   int execution_time;
 };
 
 //////////////////////////////////////////////
+
+using namespace std;
 
 int main (int argc, char *argv[])
 {
@@ -94,10 +98,15 @@ for(i = 0; i < number_of_producers; i++) {
 
 cout << "main() : successfully created both consumer and producer, " << endl << endl;
 
-for(i = 0; i < NUM_THREADS; i++ ) {
-      pthread_join(consumer_threads[i],NULL); // Line 7
+for(i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
 }
+
+for(i = 0; i < number_of_consumers; i++ ) {
+      pthread_join(consumer_threads[i],NULL); // Line 7
+}
+
+
 
   pthread_exit(NULL);
 
@@ -115,7 +124,7 @@ If the circular queue is full, block while waiting for an empty slot and if a sl
 available after 20 seconds, quit, even though you have not produced all the jobs.
 (d) Quit when there are no more jobs left to produce.
 */
-  cout << "\nEntered producer with id = " << *parameter;
+  cout << "\nEntered producer with id = " << (int*)(*parameter);
   // Fill the buffer initially
 
   bool wait_within_time_limit = true;
@@ -124,8 +133,8 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     int sleep_time = (rand() % 5) + 1;
     int job_duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds. 
 
-    job J = job(job_duration);
-
+    int job_id = 0;
+    job J = job(job_id,job_duration);
     // sleep not always?
     sleep(sleep_time); 
     // change exit condition
@@ -151,7 +160,6 @@ void *consumer (void *id)
 If the circular queue is empty, 
   block while waiting for jobs and 
   quit if no jobs arrive within 20 seconds.
-
 (c) Print the status (example format given in example output.txt).
 (d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added,
 and if not, quit.
@@ -159,13 +167,13 @@ and if not, quit.
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
-  cout << "\nEntered consumer with id = " << *id;;
+  cout << "\nEntered consumer with id = " << (int*)(*id);
    
     down(full_count);
     down(queue_access_mutex);
 
-    // Job J = Q.front();
-    // Q.pop();
+    job J = Q.front();
+    Q.pop();
 
     up(queue_access_mutex);
     up(empty_count);
