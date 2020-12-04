@@ -44,7 +44,7 @@ and number of consumers.
 // sem_init(&full, SHARED, 0);
 // sem_init(&sm,SHARED,1);
 
-   sem_t empty, full,sm;
+   // sem_t empty, full,sm;
 
    const int NUM_THREADS = 7;
 
