@@ -48,7 +48,6 @@ try {
 }
 
 //cout << "queue size = " << queue_size;
-
 arg = argv[2];
 number_of_jobs_for_each_producer = std::stoi(arg, &pos);
 
@@ -57,7 +56,6 @@ number_of_producers = std::stoi(arg, &pos);
 
 arg = argv[4];
 number_of_consumers = std::stoi(arg, &pos);
-
 
 //cout << "number of number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 /*
@@ -87,29 +85,37 @@ and number of consumers.
    
    for(i = 0; i < NUM_THREADS; i++ ) {
       cout << "main() : creating thread, " << i << endl;
-      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)i); // MISSING ARGUMENT 
-      r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)i);
+      r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
+      r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
       cout << "main() : successfully created both consumer and producer, " << endl << endl;
    }
 
-   pthread_exit(NULL);
+// what does this do?
+   for(i = 0; i < NUM_THREADS; i++ ) {
+      pthread_join(&consumer_threads[i],NULL); // Line 7
+      pthread_join(&producer_threads[i],NULL); // Line 8
+   }
+
+
 //////////////////////////////////////////////
-
-  pthread_t producerid;
+  
   int parameter = 5;
-
+  pthread_t producerid;
   pthread_create (&producerid, NULL, producer, (void *) &parameter);
-
   pthread_join (producerid, NULL);
 
   cout << "Doing some work after the join" << endl;
 
+  pthread_exit(NULL);
+
   return 0;
 }
 
+
+
 void *producer (void *parameter) 
 {
-  cout << "\nentered producer!!!";
+  cout << "\nEntered producer!!!";
   // TODO
 
   int *param = (int *) parameter;
