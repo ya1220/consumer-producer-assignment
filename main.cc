@@ -29,7 +29,7 @@ void *producer (void *id);
 void *consumer (void *id);
 
 struct job{
-  job(int id, int t) : job_id(id),(execution_time) {}
+  job(int id, int t) : job_id(id),execution_time(t) {}
 
   int job_id;
   int execution_time;
@@ -80,9 +80,10 @@ sem_t empty_count;
 sem_t full_count;
 sem_t queue_access_mutex;
 
-sem_init(&empty_count, SHARED, queue_size); // size of buffer
-sem_init(&full_count, SHARED, 0);           // zero to start with
-sem_init(&queue_access_mutex,SHARED,1);     // 0 or 1?
+// SHARED OR ZERO?
+sem_init(&empty_count, 1, queue_size); // size of buffer
+sem_init(&full_count, 1, 0);           // zero to start with
+sem_init(&queue_access_mutex,1,1);     // 0 or 1?
 
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
@@ -92,21 +93,19 @@ for(int i = 0; i < number_of_producers; i++) {
       int r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
 }
 
-for(i = 0; i < number_of_producers; i++) {
+for(int i = 0; i < number_of_producers; i++) {
       int r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
 }
 
 cout << "main() : successfully created both consumer and producer, " << endl << endl;
 
-for(i = 0; i < number_of_producers; i++ ) {
+for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
 }
 
-for(i = 0; i < number_of_consumers; i++ ) {
+for(int i = 0; i < number_of_consumers; i++ ) {
       pthread_join(consumer_threads[i],NULL); // Line 7
 }
-
-
 
   pthread_exit(NULL);
 
@@ -124,7 +123,7 @@ If the circular queue is full, block while waiting for an empty slot and if a sl
 available after 20 seconds, quit, even though you have not produced all the jobs.
 (d) Quit when there are no more jobs left to produce.
 */
-  cout << "\nEntered producer with id = " << (int*)(*parameter);
+  cout << "\nEntered producer with id = " << *((int*)(parameter));
   // Fill the buffer initially
 
   bool wait_within_time_limit = true;
@@ -147,7 +146,11 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     up(queue_access_mutex);
     up(full_count);
   }
-  // (c) Print the status (example format given in example output.txt).
+
+// (c) Print the status (example format given in example output.txt).
+std::ofstream ofs("output2.txt", std::ofstream::out);
+ofs << "writing job id = " << job_id;
+ofs.close();
 
   pthread_exit(0);
 }
@@ -167,7 +170,7 @@ and if not, quit.
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
-  cout << "\nEntered consumer with id = " << (int*)(*id);
+  cout << "\nEntered consumer with id = " << *((int*)(id));
    
     down(full_count);
     down(queue_access_mutex);
@@ -178,7 +181,7 @@ and if not, quit.
     up(queue_access_mutex);
     up(empty_count);
 
-    // sleep(J.job_duration);
+    sleep(J.job_duration);
     // change the time limit status??
   }
 
