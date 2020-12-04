@@ -19,21 +19,30 @@ void *PrintHello(void *threadid) {
 
 //////////////////////////////////////////////
 
-int main (int argc = 5, char **argv)
+int main (int argc, char **argv)
 {
   // TODO
 
+
+if (argc < 5) {
+  cerr << "Insufficient number of input parameters" << endl;
+  return 0;
+}
+
+int queue_size;
+int number_of_jobs_for_each_producer;
+int number_of_producers;
+int number_of_consumers;
+
+argv[1] = queue_size;
+argv[2] = number_of_jobs_for_each_producer;
+argv[3] = number_of_producers;
+argv[4] = number_of_consumers;
+
 /*
-
-argv[1] = queue_size
-argv[2] = number_of_jobs_for_each_producer
-argv[3] = number_of_producers
-argv[4] = number_of_consumers
-
 size of the queue, number of jobs to generate for
 each producer (each producer will generate the same number of jobs), number of producers,
 and number of consumers.
-
 */
 
 
