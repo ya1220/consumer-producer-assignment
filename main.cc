@@ -19,11 +19,9 @@ void *PrintHello(void *threadid) {
 
 //////////////////////////////////////////////
 
-int main (int argc, char **argv)
+int main (int argc, char *argv[])
 {
   // TODO
-
-
 if (argc < 5) {
   cerr << "Insufficient number of input parameters" << endl;
   return 0;
@@ -34,10 +32,31 @@ int number_of_jobs_for_each_producer;
 int number_of_producers;
 int number_of_consumers;
 
-queue_size = argv[1];
-number_of_jobs_for_each_producer = argv[2]
-number_of_producers = argv[3];
-number_of_consumers = argv[4];
+std::size_t pos;
+std::string arg = argv[1];
+
+try {
+
+  queue_size = std::stoi(arg, &pos);
+  if (pos < arg.size()) {
+    std::cerr << "Trailing characters after number: " << arg << '\n';
+  }
+} catch (std::invalid_argument const &ex) {
+  std::cerr << "Invalid number: " << arg << '\n';
+} catch (std::out_of_range const &ex) {
+  std::cerr << "Number out of range: " << arg << '\n';
+}
+
+cout << "queue size = " << queue_size;
+
+arg = argv[2];
+number_of_jobs_for_each_producer = std::stoi(arg, &pos);
+
+cout << "number of number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
+//queue_size = argv[1];
+//number_of_jobs_for_each_producer = argv[2];
+//number_of_producers = argv[3];
+//number_of_consumers = argv[4];
 
 /*
 size of the queue, number of jobs to generate for
