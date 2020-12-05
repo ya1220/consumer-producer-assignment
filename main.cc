@@ -208,7 +208,7 @@ and if not, quit.
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
 
-    job* J = Q.front();
+    job J = Q.front();
     //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
     Q.pop_front();
 
