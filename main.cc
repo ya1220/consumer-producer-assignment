@@ -150,6 +150,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 
     int job_id = p;     // how to set id?
     job J = job(job_id,duration);
+    cout << "Created job with id = " << job_id << " and duration = " << duration << " seconds.." << endl;
 
     sleep(sleep_time);
 
@@ -190,16 +191,20 @@ If the circular queue is empty,
 and if not, quit.
 */  
 
-
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
     cout << "\nEntered consumer with id = " << *((int*)(id));
+
+    // change the time limit status??
+    //sem_timedwait();
+    // break out here
    
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
 
     job J = Q.front();
+    cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
     Q.pop();
 
     sem_post(&queue_access_mutex);
@@ -207,8 +212,7 @@ and if not, quit.
 
     sleep(J.duration);
 
-    // change the time limit status??
-    //sem_timedwait();
+
   }
 
   pthread_exit (0);
