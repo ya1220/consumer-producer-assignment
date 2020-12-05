@@ -33,6 +33,8 @@ sem_t empty_count;
 sem_t full_count;
 sem_t queue_access_mutex; // pthread_mutex_T
 
+struct timespec ts;
+
 struct job{
   job(int id, int t) : job_id(id),duration(t) {}
 
@@ -140,16 +142,15 @@ available after 20 seconds, quit, even though you have not produced all the jobs
   bool wait_within_time_limit = true;
   
   while (wait_within_time_limit){
+    for(int p = 0;p < number_of_jobs_for_each_producer;p++){
+
     int sleep_time = (rand() % 5) + 1;
     int duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds. 
 
-    int job_id = 0;
-    // how to set id?
+    int job_id = p;     // how to set id?
     job J = job(job_id,duration);
-    // sleep not always?
-    sleep(sleep_time); 
-    //this_thread::sleep_for(std::chrono::milliseconds(100*J.duration));
-    // change exit condition
+
+    this_thread::sleep_for(std::chrono::milliseconds(100*sleep_time)); // sleep here?
     
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
@@ -159,16 +160,28 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
 
+/*
+    while ((s = sem_timedwait(&empty_count, &ts)) == -1 && errno == EINTR)
+    continue;       /* Restart if interrupted by handler 
+
+    if (s == -1) {
+        if (errno == ETIMEDOUT)
+            printf("sem_timedwait() timed out\n");
+        else
+            perror("sem_timedwait");
+    } else
+        printf("sem_timedwait() succeeded\n");
+
+perform down operation on semaphore space and store timeout state
+timeout = sem_timed_wait (sem_id, space, 20);
+*/
+
 // (c) Print the status (example format given in example output.txt).
 std::ofstream ofs("output2.txt", std::ofstream::out);
 ofs << "writing job id = " << job_id;
 ofs.close();
-
-// check timeout?
-// sem_timedwait() 
-  }
-
-
+      } // for loop ends
+  } // while ends
 
   pthread_exit(0);
 }
@@ -185,13 +198,12 @@ If the circular queue is empty,
 (d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added,
 and if not, quit.
 */  
+
+
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
-
-//    for(int p = 0;p < number_of_jobs_for_each_producer;p++){
-
-  cout << "\nEntered consumer with id = " << *((int*)(id));
+    cout << "\nEntered consumer with id = " << *((int*)(id));
    
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
@@ -204,6 +216,8 @@ and if not, quit.
 
     sleep(J.duration);
     // change the time limit status??
+
+    sem_timedwait();
   }
 
   pthread_exit (0);
