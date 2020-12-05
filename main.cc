@@ -83,12 +83,14 @@ sem_t queue_access_mutex; // pthread_mutex_T
 
 // SHARED OR ZERO?
 sem_init(&empty_count, 0, queue_size); // size of buffer
-sem_init(&full_count, 0, 0);           // zero to start with
-sem_init(&queue_access_mutex,0,1);     // 0 or 1?
+sem_init(&full_count, 0, 0);           // 
+sem_init(&queue_access_mutex,0,1);     // 
 
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
+
 std::queue<job> Q;
+// resize queue
    
 for(int i = 0; i < number_of_producers; i++) {
       int r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
@@ -138,7 +140,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     int sleep_time = (rand() % 5) + 1;
     int duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds. 
 
-    int id = 0;
+    int job_id = 0;
     // how to set id?
     job J = job(job_id,duration);
     // sleep not always?
@@ -171,7 +173,7 @@ ofs.close();
 void *consumer (void *id) 
 {
 /*
-(b) Take a job from the circular queue
+(b) Take a job from the circular queue 
 ‘sleep’ for the duration specified. 
 If the circular queue is empty, 
   block while waiting for jobs and 
@@ -183,8 +185,8 @@ and if not, quit.
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
-
-// number_of_jobs_for_each_producer -- loop through
+    
+//    for(int p = 0;p < number_of_jobs_for_each_producer;p++){
 
   cout << "\nEntered consumer with id = " << *((int*)(id));
    
