@@ -170,7 +170,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 
     // else - wait 20 seconds 
     ts_consumer.tv_sec += 20;
-    if (sem_timedwait( &sem, &ts_consumer) != -1 ) {wait_within_time_limit = false; break;}  // 20 seconds
+    if (sem_timedwait(&empty_count, &ts_consumer) != -1 ) {wait_within_time_limit = false; break;}  // 20 seconds
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
   cout << "Producer("<< *producer_id << "): Job id " << id << " sleeping for " << sleep_time << " seconds";
