@@ -33,14 +33,14 @@ sem_t empty_count;
 sem_t full_count;
 sem_t queue_access_mutex; // pthread_mutex_T
 
-std::queue<job> Q;
-
 struct job{
   job(int id, int t) : job_id(id),duration(t) {}
 
   int job_id;
   int duration;
 };
+
+std::queue<job> Q;
 
 //////////////////////////////////////////////
 
@@ -95,14 +95,16 @@ pthread_t producer_threads[number_of_producers];
 // resize queue
    
 for(int i = 0; i < number_of_producers; i++) {
-      int r_p = pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
+      //int r_p = 
+      pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
 }
 
 for(int i = 0; i < number_of_producers; i++) {
-      int r_c = pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
+      //int r_c = 
+      pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
 }
 
-cout << "main() : successfully created both consumer and producer, " << endl << endl;
+//cout << "main() : successfully created both consumer and producer, " << endl << endl;
 
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
@@ -112,12 +114,11 @@ for(int i = 0; i < number_of_consumers; i++ ) {
       pthread_join(consumer_threads[i],NULL); // Line 7
 }
 
-  pthread_exit(NULL);
+ pthread_exit(NULL);
 
-
-// sem_destroy(&empty_count);
-// sem_destroy();
-// sem_destroy();
+ sem_destroy(&empty_count);
+ sem_destroy(&full_count);
+ sem_destroy(&queue_access_mutex);
 
   return 0;
 }
