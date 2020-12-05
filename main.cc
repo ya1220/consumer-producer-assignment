@@ -159,7 +159,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     job J = job(job_id,duration);
     //cout << "Created job with id = " << job_id << " and duration = " << duration << endl;
 
-    if (Q.size() < queue_size){} // if queue has space - then add item
+    if (Q.size() < queue_size){ // if queue has space - then add item
 
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
@@ -169,13 +169,17 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
 
-    // else - wait 20 seconds 
+
+  } else // else     // else - wait 20 seconds 
+   { 
     ts_consumer.tv_sec += 20;
-    if (sem_timedwait(&empty_count, &ts_consumer) != -1 ) {wait_within_time_limit = false; break;}  // 20 seconds
+    cout << "..waiting 20 seconds.."
+    if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
+}
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Producer("<< *producer_id << "): Job id " << id << " sleeping for " << sleep_time << " seconds";
-  cout << "Producer("<< *producer_id << "): Job id " << id << " duration " << duration << " seconds";
+  cout << "Producer("<< *producer_id << "): Job id " << id << " sleeping for " << sleep_time << " seconds" << endl;
+  cout << "Producer("<< *producer_id << "): Job id " << id << " duration " << duration << " seconds" << endl;
 ofs.close();
       } // for loop ends
   } // while ends
