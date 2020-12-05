@@ -163,7 +163,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
     
-    Q.push(J);     // every 5 seconds = already slept
+    Q.push_back(J);     // every 5 seconds = already slept
     
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
@@ -206,7 +206,7 @@ and if not, quit.
 
     job J = Q.front();
     //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
-    Q.pop();
+    Q.pop_front();
 
     sem_post(&queue_access_mutex);
     sem_post(&empty_count);
