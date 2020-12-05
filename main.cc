@@ -33,6 +33,11 @@ sem_t empty_count;
 sem_t full_count;
 sem_t queue_access_mutex; // pthread_mutex_T
 
+int queue_size;
+int number_of_jobs_for_each_producer;
+int number_of_producers;
+int number_of_consumers;
+
 struct timespec ts;
 
 struct job{
@@ -56,10 +61,6 @@ if (argc < 5) {
   return 0;
 }
 
-int queue_size;
-int number_of_jobs_for_each_producer;
-int number_of_producers;
-int number_of_consumers;
 
 std::size_t pos;
 std::string arg = argv[1];
