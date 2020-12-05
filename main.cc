@@ -99,14 +99,12 @@ pthread_t producer_threads[number_of_producers];
 
 // resize queue
    
-for(int i = 0; i < number_of_producers; i++) {
-      //int r_p = 
-  cout << "creating thread in producer..id = " << i << endl;
+for(int i = 0; i < number_of_consumers; i++) {
+  cout << "\nIn main: creating thread in producer..id = " << i << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
 }
 
 for(int i = 0; i < number_of_producers; i++) {
-      //int r_c = 
       pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
 }
 
