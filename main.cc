@@ -30,10 +30,10 @@ void *producer (void *id);
 void *consumer (void *id);
 
 struct job{
-  job(int id, int t) : job_id(id),execution_time(t) {}
+  job(int id, int t) : job_id(id),duration(t) {}
 
   int job_id;
-  int execution_time;
+  int duration;
 };
 
 //////////////////////////////////////////////
@@ -79,12 +79,12 @@ number_of_consumers = std::stoi(arg, &pos);
 
 sem_t empty_count;
 sem_t full_count;
-sem_t queue_access_mutex;
+sem_t queue_access_mutex; // pthread_mutex_T
 
 // SHARED OR ZERO?
-sem_init(&empty_count, 1, queue_size); // size of buffer
-sem_init(&full_count, 1, 0);           // zero to start with
-sem_init(&queue_access_mutex,1,1);     // 0 or 1?
+sem_init(&empty_count, 0, queue_size); // size of buffer
+sem_init(&full_count, 0, 0);           // zero to start with
+sem_init(&queue_access_mutex,0,1);     // 0 or 1?
 
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
@@ -110,6 +110,11 @@ for(int i = 0; i < number_of_consumers; i++ ) {
 
   pthread_exit(NULL);
 
+
+// sem_destroy(&empty_count);
+// sem_destroy();
+// sem_destroy();
+
   return 0;
 }
 
@@ -131,30 +136,31 @@ available after 20 seconds, quit, even though you have not produced all the jobs
   
   while (wait_within_time_limit){
     int sleep_time = (rand() % 5) + 1;
-    int job_duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds. 
+    int duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds. 
 
-    int job_id = 0;
-    job J = job(job_id,job_duration);
+    int id = 0;
+    // how to set id?
+    job J = job(job_id,duration);
     // sleep not always?
     sleep(sleep_time); 
-
-    //this_thread::sleep_for(std::chrono::milliseconds(600));
-    //sem.wait( 3 );
-    
+    //this_thread::sleep_for(std::chrono::milliseconds(100*J.duration));
     // change exit condition
     
-    down(empty_count);
-    down(queue_access_mutex);
+    sem_wait(&empty_count);
+    sem_wait(&queue_access_mutex);
     
     Q.push(J);
     
-    up(queue_access_mutex);
-    up(full_count);
-    
+    sem_post(&queue_access_mutex);
+    sem_post(&full_count);
+
 // (c) Print the status (example format given in example output.txt).
 std::ofstream ofs("output2.txt", std::ofstream::out);
 ofs << "writing job id = " << job_id;
 ofs.close();
+
+// check timeout?
+// sem_timedwait() 
   }
 
 
@@ -177,18 +183,21 @@ and if not, quit.
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
+
+// number_of_jobs_for_each_producer -- loop through
+
   cout << "\nEntered consumer with id = " << *((int*)(id));
    
-    down(full_count);
-    down(queue_access_mutex);
+    sem_wait(&full_count);
+    sem_wait(&queue_access_mutex);
 
     job J = Q.front();
     Q.pop();
 
-    up(queue_access_mutex);
-    up(empty_count);
+    sem_post(&queue_access_mutex);
+    sem_post(&empty_count);
 
-    sleep(J.job_duration);
+    sleep(J.duration);
     // change the time limit status??
   }
 
