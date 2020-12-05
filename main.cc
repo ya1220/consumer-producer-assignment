@@ -29,6 +29,12 @@
 void *producer (void *id);
 void *consumer (void *id);
 
+sem_t empty_count;
+sem_t full_count;
+sem_t queue_access_mutex; // pthread_mutex_T
+
+std::queue<job> Q;
+
 struct job{
   job(int id, int t) : job_id(id),duration(t) {}
 
@@ -77,9 +83,6 @@ arg = argv[4];
 number_of_consumers = std::stoi(arg, &pos);
 
 
-sem_t empty_count;
-sem_t full_count;
-sem_t queue_access_mutex; // pthread_mutex_T
 
 // SHARED OR ZERO?
 sem_init(&empty_count, 0, queue_size); // size of buffer
@@ -89,7 +92,6 @@ sem_init(&queue_access_mutex,0,1);     //
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
 
-std::queue<job> Q;
 // resize queue
    
 for(int i = 0; i < number_of_producers; i++) {
@@ -185,7 +187,7 @@ and if not, quit.
   bool consumer_wait_within_time_limit = true;
 
   while(consumer_wait_within_time_limit) {
-    
+
 //    for(int p = 0;p < number_of_jobs_for_each_producer;p++){
 
   cout << "\nEntered consumer with id = " << *((int*)(id));
