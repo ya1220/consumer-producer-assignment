@@ -21,7 +21,7 @@
 //#include "helper.h"
 //////////////////////////////////////////////
 
-#include <queue>
+#include <deque>
 #include <semaphore.h>
 #include <cstdlib>
 #include <fstream>
@@ -39,7 +39,8 @@ int number_of_jobs_for_each_producer;
 int number_of_producers;
 int number_of_consumers;
 
-struct timespec ts;
+struct timespec ts_consumer;
+struct timespec ts_producer;
 
 struct job{
   job(int id_, int t) : id(id_),duration(t) {}
@@ -48,7 +49,7 @@ struct job{
   int duration;
 };
 
-std::queue<job> Q;
+std::deque<job> Q;
 
 //////////////////////////////////////////////
 
@@ -150,7 +151,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 
     sleep(sleep_time);
 
-    auto it = find_if(Q.begin(), Q.end(), [&p](const job& obj) {return obj.id == p;})
+    auto it = find_if(Q.begin(), Q.end(), [&p](const job& obj) {return obj.id == p;});
     // if it != Q.end();
 
     int job_id = p;   
@@ -168,8 +169,8 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     sem_post(&full_count);
 
     // else - wait 20 seconds 
-    // if (sem_timedwait( &sem, &tm) != -1 ) {break;} wait_within_time_limit = false; // 20 seconds
-    // clock_gettime(CLOCK_REALTIME, &tm); 
+    ts_consumer.tv_sec += 20;
+    if (sem_timedwait( &sem, &ts_consumer) != -1 ) {wait_within_time_limit = false; break;}  // 20 seconds
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
   cout << "Producer("<< *producer_id << "): Job id " << id << " sleeping for " << sleep_time << " seconds";
