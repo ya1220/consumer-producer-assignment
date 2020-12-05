@@ -101,6 +101,7 @@ pthread_t producer_threads[number_of_producers];
    
 for(int i = 0; i < number_of_producers; i++) {
       //int r_p = 
+  cout << "creating thread in producer..id = " << i << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
 }
 
@@ -139,9 +140,11 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 (d) Quit when there are no more jobs left to produce.
 */
 
-//  cout << "\nEntered producer with id = " << *producer_id;
+
   int *producer_id = (int *)id;
   bool wait_within_time_limit = true;
+
+  cout << "\nEntered producer with id = " << *producer_id;
   
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
@@ -194,17 +197,18 @@ If the circular queue is empty,
 and if not, quit.
 */  
   int *consumer_id = (int *) id;
-
   bool consumer_wait_within_time_limit = true;
 
+  cout << "\nEntered consumer with id = " << *consumer_id;
+
   while(consumer_wait_within_time_limit) {
-//    cout << "\nEntered consumer with id = " << *consumer_id;
+
 
     // if Q.size() > 0 - enter critical section + take it    
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
 
-    job J = Q.front();
+    job* J = Q.front();
     //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
     Q.pop_front();
 
@@ -216,8 +220,8 @@ and if not, quit.
     sleep(J.duration);     // Consume
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " executing sleep duration " << J.duration << endl;
-  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " completed" << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J->id << " executing sleep duration " << J.duration << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J->id << " completed" << endl;
 ofs.close();
   }
 
