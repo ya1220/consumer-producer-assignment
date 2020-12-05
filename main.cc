@@ -217,11 +217,11 @@ and if not, quit.
     // else - timedwait 20 seconds
     // if not timedwait - break - consumer_wait_within_time_limit = false
 
-    sleep(J->duration);     // Consume
+    sleep(J.duration);     // Consume
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Consumer("<< *consumer_id << "): Job id " << J->id << " executing sleep duration " << J->duration << endl;
-  cout << "Consumer("<< *consumer_id << "): Job id " << J->id << " completed" << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " executing sleep duration " << J.duration << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " completed" << endl;
 ofs.close();
   }
 
