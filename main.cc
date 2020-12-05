@@ -151,8 +151,13 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     int job_id = p;     // how to set id?
     job J = job(job_id,duration);
 
-    //this_thread::sleep_for(std::chrono::milliseconds(100*sleep_time)); // sleep here?
     sleep(sleep_time);
+
+// perform down op on semaphore + save timeout status
+// timeout = sem_timed_wait (sem_id, space, 20);
+// if (sem_timedwait( &sem, &tm) != -1 ) {break;}
+// clock_gettime(CLOCK_REALTIME, &tm);
+    //
 
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
@@ -161,22 +166,6 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
-
-/*
-    while ((s = sem_timedwait(&empty_count, &ts)) == -1 && errno == EINTR)
-    continue;       /* Restart if interrupted by handler 
-
-    if (s == -1) {
-        if (errno == ETIMEDOUT)
-            printf("sem_timedwait() timed out\n");
-        else
-            perror("sem_timedwait");
-    } else
-        printf("sem_timedwait() succeeded\n");
-
-perform down operation on semaphore space and store timeout state
-timeout = sem_timed_wait (sem_id, space, 20);
-*/
 
 // (c) Print the status (example format given in example output.txt).
 std::ofstream ofs("output2.txt", std::ofstream::out);
@@ -217,9 +206,9 @@ and if not, quit.
     sem_post(&empty_count);
 
     sleep(J.duration);
-    // change the time limit status??
 
-    sem_timedwait();
+    // change the time limit status??
+    //sem_timedwait();
   }
 
   pthread_exit (0);
