@@ -25,6 +25,7 @@
 #include <semaphore.h>
 #include <cstdlib>
 #include <fstream>
+#include <algorithm> 
 
 void *producer (void *id);
 void *consumer (void *id);
@@ -41,9 +42,9 @@ int number_of_consumers;
 struct timespec ts;
 
 struct job{
-  job(int id, int t) : job_id(id),duration(t) {}
+  job(int id_, int t) : id(id_),duration(t) {}
 
-  int job_id;
+  int id;
   int duration;
 };
 
