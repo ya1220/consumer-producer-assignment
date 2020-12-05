@@ -151,8 +151,9 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     int job_id = p;     // how to set id?
     job J = job(job_id,duration);
 
-    this_thread::sleep_for(std::chrono::milliseconds(100*sleep_time)); // sleep here?
-    
+    //this_thread::sleep_for(std::chrono::milliseconds(100*sleep_time)); // sleep here?
+    sleep(sleep_time);
+
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
     
