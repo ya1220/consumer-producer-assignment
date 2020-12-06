@@ -162,10 +162,9 @@ If the circular queue is full, block while waiting for an empty slot and if a sl
 available after 20 seconds, quit, even though you have not produced all the jobs.
 (d) Quit when there are no more jobs left to produce.
 */
- // int *producer_id = (int*)id;
+  int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
-  cout << "\nStarted producer thread = " <<  *((int *)id) << endl; // *producer_id;
-
+  cout << "\nStarted producer thread = " <<  *producer_id << endl; // *producer_id;
   
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
@@ -214,8 +213,9 @@ ofs.close();
 
 void *consumer (void *id) 
 { 
+  int *consumer_id = (int*)id;
   job J_copy;
-  cout << "\nStarting consumer thread with id = " << *((int *)id) << endl; // *consumer_id;
+  cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
 
         clock_gettime(CLOCK_REALTIME, &ts_consumer);
         ts_consumer.tv_sec += 20;
