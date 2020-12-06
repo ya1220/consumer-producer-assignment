@@ -177,8 +177,8 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 }
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Producer("<< *producer_id << "): Job id " << id << " sleeping for " << sleep_time << " seconds" << endl;
-  cout << "Producer("<< *producer_id << "): Job id " << id << " duration " << duration << " seconds" << endl;
+  cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " seconds" << endl;
+  cout << "Producer("<< *producer_id << "): Job id " << job_id << " duration " << duration << " seconds" << endl;
 ofs.close();
       } // for loop ends
   } // while ends
@@ -226,8 +226,8 @@ and if not, quit.
     sleep(J.duration);     // Consume
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Consumer("<< *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
-  cout << "Consumer("<< *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
+  cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+  cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
 ofs.close();
   }
 
