@@ -81,14 +81,48 @@ try {
   std::cerr << "Number out of range: " << arg << '\n';
 }
 
+
 arg = argv[2]; //cout << "queue size = " << queue_size;
-number_of_jobs_for_each_producer = std::stoi(arg, &pos);
+
+try {
+  number_of_jobs_for_each_producer = std::stoi(arg, &pos);
+  if (pos < arg.size()) {
+    std::cerr << "Extra characters after number: " << arg << '\n';
+  }
+} catch (std::invalid_argument const &ex) {
+  std::cerr << "Invalid number: " << arg << '\n';
+} catch (std::out_of_range const &ex) {
+  std::cerr << "Number out of range: " << arg << '\n';
+}
+
+//number_of_jobs_for_each_producer = std::stoi(arg, &pos);
 
 arg = argv[3];
-number_of_producers = std::stoi(arg, &pos);
 
+try {
+  number_of_producers = std::stoi(arg, &pos);
+  if (pos < arg.size()) {
+    std::cerr << "Extra characters after number: " << arg << '\n';
+  }
+} catch (std::invalid_argument const &ex) {
+  std::cerr << "Invalid number: " << arg << '\n';
+} catch (std::out_of_range const &ex) {
+  std::cerr << "Number out of range: " << arg << '\n';
+}
+
+//number_of_producers = std::stoi(arg, &pos);
 arg = argv[4];
-number_of_consumers = std::stoi(arg, &pos);
+
+try {
+  number_of_consumers = std::stoi(arg, &pos);
+  if (pos < arg.size()) {
+    std::cerr << "Extra characters after number: " << arg << '\n';
+  }
+} catch (std::invalid_argument const &ex) {
+  std::cerr << "Invalid number: " << arg << '\n';
+} catch (std::out_of_range const &ex) {
+  std::cerr << "Number out of range: " << arg << '\n';
+}
 
 
 sem_init(&empty_count, 0, queue_size); // size of buffer
@@ -175,10 +209,10 @@ void *producer (void *id)
       producer_timer_result = sem_timedwait(&empty_count,&ts_producer);
       
       if (producer_timer_result == -1){
-        std::ofstream ofs("output2.txt", std::ofstream::out);
-          ofs << "Producer("<< *producer_id << "): Job id " << job_id << " timed out" << endl;
+     //   std::ofstream ofs("output2.txt", std::ofstream::out);
+       //   ofs << "Producer("<< *producer_id << "): Job id " << job_id << " timed out" << endl;
           cout << "Producer("<< *producer_id << "): Job id " << job_id << " timed out" << endl;
-        ofs.close();
+       // ofs.close();
       break;
       }       // if timer times out - break
       
@@ -196,10 +230,10 @@ void *producer (void *id)
       sem_post(&queue_access_mutex);
       sem_post(&full_count);
 
-        std::ofstream ofs("output2.txt", std::ofstream::out);
-          ofs << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
+      //  std::ofstream ofs("output2.txt", std::ofstream::out);
+        //  ofs << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
           cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
-        ofs.close();
+        // ofs.close();
       } // for loop ends
 
   pthread_exit(0);  
@@ -233,21 +267,21 @@ void *consumer (void *id)
           sem_post(&queue_access_mutex);
           sem_post(&empty_count);
 
-          std::ofstream ofs("output2.txt", std::ofstream::out);
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
+//          std::ofstream ofs("output2.txt", std::ofstream::out);
+//            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
             cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
           sleep(J_copy.duration);     // Consume
 
-          ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
+//          ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
           cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
-          ofs.close();
+  //        ofs.close();
         }
 
         if (consumer_timer_result == -1) {
-            std::ofstream ofs("output2.txt", std::ofstream::out);
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
+    //        std::ofstream ofs("output2.txt", std::ofstream::out);
+      //      ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
             cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
-            ofs.close();
+        //    ofs.close();
         }
 
           pthread_exit(0);
