@@ -167,11 +167,10 @@ If the circular queue is full, block while waiting for an empty slot and if a sl
 available after 20 seconds, quit, even though you have not produced all the jobs.
 (d) Quit when there are no more jobs left to produce.
 */
-
-  int *producer_id = (int*)id;
+ // int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
 
-  cout << "\nStarted producer thread = " <<  *((int *)id); // *producer_id;
+  cout << "\nStarted producer thread = " <<  *((int *)id) << endl; // *producer_id;
   //sleep(5);
   /*
   while (wait_within_time_limit){
@@ -225,10 +224,10 @@ void *consumer (void *id)
 If the circular queue is empty, block while waiting for jobs and quit if no jobs arrive within 20 seconds.
 (d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added, and if not, quit.
 */  
-  int *consumer_id = (int*) id;
+  //int *consumer_id = (int*) id;
   bool consumer_wait_within_time_limit = true;
   job J_copy;
-  cout << "\nStarting consumer thread with id = " << *((int *)id); // *consumer_id;
+  cout << "\nStarting consumer thread with id = " << *((int *)id) << endl; // *consumer_id;
  // sleep(5);
 /*
   while(consumer_wait_within_time_limit) {
