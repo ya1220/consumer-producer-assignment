@@ -44,6 +44,7 @@ struct timespec ts_consumer;
 struct timespec ts_producer;
 
 struct job{
+  job() {}
   job(int id_, int t) : id(id_),duration(t) {}
 
   int id;
