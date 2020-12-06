@@ -91,6 +91,8 @@ arg = argv[4];
 number_of_consumers = std::stoi(arg, &pos);
 
 
+
+// SHARED OR ZERO?
 sem_init(&empty_count, 0, queue_size); // size of buffer
 sem_init(&full_count, 0, 0);           // 
 sem_init(&queue_access_mutex,0,1);     // 
@@ -129,7 +131,10 @@ while(j < number_of_producers) {
 }
 
 cout << "..Created all producer threads..";
+
 cout << "\n\nCreated all threads!!!";
+
+//sleep(5);
 
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
@@ -140,11 +145,13 @@ for(int i = 0; i < number_of_consumers; i++ ) {
 }
 
 cout << "Joined all threads!!!\n";
-cout << "..Cleanup starts..";
 
- sem_destroy(&empty_count);
- sem_destroy(&full_count);
- sem_destroy(&queue_access_mutex);
+cout << "..Cleanup starts..";
+ //pthread_exit(NULL);
+
+ //sem_destroy(&empty_count);
+ //sem_destroy(&full_count);
+ //sem_destroy(&queue_access_mutex);
 
 delete [] temp;
 delete [] temp2;
@@ -165,8 +172,8 @@ available after 20 seconds, quit, even though you have not produced all the jobs
  // int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
   cout << "\nStarted producer thread = " <<  *((int *)id) << endl; // *producer_id;
-
-  
+  //sleep(5);
+  /*
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
 
@@ -209,36 +216,74 @@ ofs.close();
   } // while ends
 
   pthread_exit(0);
-  
+  */
 }
 
 void *consumer (void *id) 
-{ 
+{ /*
+(b) Take a job from the circular queue - ‘sleep’ for the duration specified. 
+If the circular queue is empty, block while waiting for jobs and quit if no jobs arrive within 20 seconds.
+(d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added, and if not, quit.
+*/  
+  //int *consumer_id = (int*) id;
+  bool consumer_wait_within_time_limit = true;
   job J_copy;
   cout << "\nStarting consumer thread with id = " << *((int *)id) << endl; // *consumer_id;
+ // sleep(5);
+/*
+  while(consumer_wait_within_time_limit) {
 
+  /*
+                sem_wait(&full_count);
+    do {
         clock_gettime(CLOCK_REALTIME, &ts_consumer);
-        ts_consumer.tv_sec += 20;
+        ts_consumer.tv_sec += 1;
+        i++;       //  printf("i=%d\n",i);
+        (if Q.size() > 0) {
 
-    while (sem_timedwait(&full_count, &ts_consumer) == -1 ){
-
-          sem_wait(&queue_access_mutex);      
+          sem_wait(&queue_access_mutex);
               job J = Q.front();
               J_copy = job(J.id,J.duration);
               Q.pop_front();
-          sem_post(&queue_access_mutex);
-          sem_post(&empty_count);
+          // lift
+          // break
+             sleep(J.duration);     // Consume
+        }
+        else{ // if queue empty - 
+          wait for 
+        }
 
-          std::ofstream ofs("output2.txt", std::ofstream::out);
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+        if (i == 20) {sem_post(&empty_count);}
+    }
+    while (sem_timedwait(&empty_count, &ts_consumer) == -1 );
+///////////////////////   
+  
 
-          sleep(J.duration);     // Consume
+    sem_wait(&full_count);
+    sem_wait(&queue_access_mutex);
 
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
-    } // while 
+    if (Q.size() > 0){ // if there is something to take
+      //job J = Q.front();
+      J_copy = job(Q.front().id,Q.front().duration);
+      Q.pop_front();
+    } else
+    {
+      ts_consumer.tv_sec += 20;     cout << "..consumer waiting 20 seconds..";
+      if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {consumer_wait_within_time_limit = false; break;}  // 20 seconds
+      cout << "..done waiting..";
+    }
 
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
+    sem_post(&queue_access_mutex);
+    sem_post(&empty_count);
 
-          ofs.close();
-          pthread_exit(0);
+    sleep(J_copy.duration);     // Consume
+
+std::ofstream ofs("output2.txt", std::ofstream::out);
+  cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+  cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
+ofs.close();
+  }
+
+  pthread_exit (0);
+  */
 }
