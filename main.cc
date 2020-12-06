@@ -231,7 +231,7 @@ void *consumer (void *id)
           std::ofstream ofs("output2.txt", std::ofstream::out);
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
 
-          sleep(J.duration);     // Consume
+          sleep(J_copy.duration);     // Consume
 
           ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
           ofs.close();
