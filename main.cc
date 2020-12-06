@@ -210,7 +210,7 @@ and if not, quit.
     sem_wait(&queue_access_mutex);
 
     job J = Q.front();
-    job J_coy = (J.id,J.duration);
+    job J_copy = job(J.id,J.duration);
     //cout << "got j from deque: " << &J << endl;
     //cout << "got j from deque Duration: " << J.duration << endl;
     //cout << "got j from deque ID: " << J.id << endl;
