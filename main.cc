@@ -151,14 +151,18 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 
     sleep(sleep_time);
 
-    auto it = find_if(Q.begin(), Q.end(), [&p](const job& obj) {return obj.id == p;});
-    // if it != Q.end();
-
+    int current_number_of_items_in_buffer = Q.size();
     int job_id = p;   
-    job J = job(job_id,duration);
-    //cout << "Created job with id = " << job_id << " and duration = " << duration << endl;
 
-    if (Q.size() < queue_size){ // if queue has space - then add item
+    for (int i = 0; i < current_number_of_items_in_buffer; ++i){
+      auto it = find_if(Q.begin(), Q.end(), [&p](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
+      if (it != Q.end()){job_id = ((p+i) % current_number_of_items_in_buffer);break;}
+    }
+
+    job J = job(job_id,duration);
+     cout << "..Created job with id = " << job_id << " and duration = " << duration << endl;
+     
+    if (current_number_of_items_in_buffer < queue_size){ // if queue has space - then add item
 
     sem_wait(&empty_count);
     sem_wait(&queue_access_mutex);
@@ -167,10 +171,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
-
-
-  } else // else     // else - wait 20 seconds 
-   { 
+  } else{ 
     ts_consumer.tv_sec += 20;
     cout << "..waiting 20 seconds..";
     if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
