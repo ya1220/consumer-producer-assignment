@@ -103,20 +103,26 @@ pthread_t producer_threads[number_of_producers];
 int* temp;
 int* temp2;
 
+int i,j;
+
 temp = new (nothrow) int[number_of_consumers];
 temp2 = new (nothrow) int[number_of_producers];
 
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
-for(int i = 0; i < number_of_consumers; i++) {
+for(i = 0; i < number_of_consumers; i++) {
       temp[i] = i;
       pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
 }
 
-for(int i = 0; i < number_of_producers; i++) {
-      temp2[i] = i;
-      pthread_create(&producer_threads[i], NULL, producer, (void*)&temp2[i]);
+Cout << "..Created all consumer threads..";
+
+for(j = 0; i < number_of_producers; j++) {
+      temp2[i] = j;
+      pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
 }
+
+Cout << "..Created all producer threads..";
 
 cout << "\n\nCreated all threads!!!";
 /*
