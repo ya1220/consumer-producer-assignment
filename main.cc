@@ -115,7 +115,7 @@ for(i = 0; i < number_of_consumers; i++) {
       pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
 }
 
-Cout << "..Created all consumer threads..";
+cout << "..Created all consumer threads..";
 
 for(j = 0; i < number_of_producers; j++) {
       temp2[i] = j;
