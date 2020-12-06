@@ -22,6 +22,7 @@
 //////////////////////////////////////////////
 
 #include <deque>
+#include <vector>
 #include <semaphore.h>
 #include <cstdlib>
 #include <fstream>
