@@ -100,11 +100,11 @@ sem_init(&queue_access_mutex,0,1);     //
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
 
-//vector<int> temp;
-//vector<int> temp2;
+int* temp;
+int* temp2;
 
-int temp = new int[number_of_consumers];
-int temp2 = new int[number_of_producers];
+temp = new (nothrow) int[number_of_consumers];
+temp2 = new (nothrow) int[number_of_producers];
 
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
@@ -121,7 +121,7 @@ for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
      // temp2.push_back(ii);
   temp2[i] = i;
-      pthread_create(&producer_threads[ii], NULL, consumer, (void*)&temp2[ii]);
+      pthread_create(&producer_threads[ii], NULL, consumer, (void*)&temp2[i]);
 }
 
 cout << "Created all threads!!!";
