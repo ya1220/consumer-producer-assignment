@@ -138,7 +138,6 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 (d) Quit when there are no more jobs left to produce.
 */
 
-
   int *producer_id = (int *)id;
   bool wait_within_time_limit = true;
 
@@ -211,6 +210,10 @@ and if not, quit.
     sem_wait(&queue_access_mutex);
 
     job J = Q.front();
+    cout << "got j from deque: " << &J << endl;
+    cout << "got j from deque Duration: " << J.duration << endl;
+    cout << "got j from deque ID: " << J.id << endl;
+
     //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
     Q.pop_front();
 
