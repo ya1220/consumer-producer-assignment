@@ -103,8 +103,8 @@ pthread_t producer_threads[number_of_producers];
 //vector<int> temp;
 //vector<int> temp2;
 
-int[] temp = new int[number_of_consumers];
-int[] temp2 = new int[number_of_producers];
+int temp = new int[number_of_consumers];
+int temp2 = new int[number_of_producers];
 
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
