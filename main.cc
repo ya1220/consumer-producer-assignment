@@ -230,15 +230,15 @@ void *consumer (void *id)
           sem_post(&empty_count);
 
           std::ofstream ofs("output2.txt", std::ofstream::out);
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
 
           sleep(J.duration);     // Consume
 
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
+            ofstream.close();
     } // while 
-
-            cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
-
+          std::ofstream ofs("output2.txt", std::ofstream::out);
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
           ofs.close();
           pthread_exit(0);
 }
