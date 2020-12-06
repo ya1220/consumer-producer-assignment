@@ -99,19 +99,18 @@ sem_init(&queue_access_mutex,0,1);     //
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
 
-// resize queue
+vector<int> temp;
    
 for(int i = 0; i < number_of_consumers; i++) {
+  temp.push_back(i);
   cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
-      pthread_create(&consumer_threads[i], NULL, producer, (void *)&i);
+      pthread_create(&consumer_threads[i], NULL, producer, (void *)&temp[i]);
 }
 
 for(int i = 0; i < number_of_producers; i++) {
     cout << "\nIn main: creating thread in Producer - id = " << i << endl;
-      pthread_create(&producer_threads[i], NULL, consumer, (void *)&i);
+      pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp[i]);
 }
-
-//cout << "main() : successfully created both consumer and producer, " << endl << endl;
 
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
@@ -234,8 +233,8 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
     sem_wait(&queue_access_mutex);
 
     if (Q.size() > 0){ // if there is something to take
-      job J = Q.front();
-      J_copy = job(J.id,J.duration);
+      //job J = Q.front();
+      J_copy = job(Q.front().id,Q.front().duration);
       Q.pop_front();
     } else
     {
@@ -247,7 +246,7 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
     sem_post(&queue_access_mutex);
     sem_post(&empty_count);
 
-    sleep(J.duration);     // Consume
+    sleep(J_copy.duration);     // Consume
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
   cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
