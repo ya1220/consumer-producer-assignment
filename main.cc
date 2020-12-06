@@ -120,6 +120,8 @@ for(int i = 0; i < number_of_producers; i++) {
       pthread_create(&producer_threads[i], NULL, consumer, (void*)&temp2[i]);
 }
 
+cout << "Created all threads!!!";
+
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
 }
@@ -128,11 +130,11 @@ for(int i = 0; i < number_of_consumers; i++ ) {
       pthread_join(consumer_threads[i],NULL); // Line 7
 }
 
- pthread_exit(NULL);
+ //pthread_exit(NULL);
 
- sem_destroy(&empty_count);
- sem_destroy(&full_count);
- sem_destroy(&queue_access_mutex);
+ //sem_destroy(&empty_count);
+ //sem_destroy(&full_count);
+ //sem_destroy(&queue_access_mutex);
 
   return 0;
 }
