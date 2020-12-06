@@ -152,7 +152,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
   bool wait_within_time_limit = true;
 
   cout << "\nStarted producer thread = " << *producer_id;
-  
+  /*
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
 
@@ -195,6 +195,7 @@ ofs.close();
   } // while ends
 
   pthread_exit(0);
+  */
 }
 
 void *consumer (void *id) 
@@ -208,7 +209,7 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
   job J_copy;
 
   cout << "\nStarting consumer thread with id = " << *consumer_id;
-
+/*
   while(consumer_wait_within_time_limit) {
 
   /*
@@ -234,8 +235,8 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
         if (i == 20) {sem_post(&empty_count);}
     }
     while (sem_timedwait(&empty_count, &ts_consumer) == -1 );
-   
-  */
+///////////////////////   
+  
 
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
@@ -263,4 +264,5 @@ ofs.close();
   }
 
   pthread_exit (0);
+  */
 }
