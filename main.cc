@@ -109,20 +109,16 @@ temp2 = new (nothrow) int[number_of_producers];
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
 for(int i = 0; i < number_of_consumers; i++) {
-  temp[i] = i;
-  //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
-  //cout << "temp i = [" << i << "] = " << temp[i] << endl;
+      temp[i] = i;
       pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
 }
 
 for(int i = 0; i < number_of_producers; i++) {
-    //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
-     // temp2.push_back(ii);
-  temp2[i] = i;
+      temp2[i] = i;
       pthread_create(&producer_threads[i], NULL, producer, (void*)&temp2[i]);
 }
 
-cout << "Created all threads!!!";
+cout << "\n\nCreated all threads!!!";
 /*
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
@@ -159,6 +155,7 @@ available after 20 seconds, quit, even though you have not produced all the jobs
   bool wait_within_time_limit = true;
 
   cout << "\nStarted producer thread = " << *producer_id;
+  sleep(5);
   /*
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
@@ -216,6 +213,7 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
   job J_copy;
 
   cout << "\nStarting consumer thread with id = " << *consumer_id;
+  sleep(5);
 /*
   while(consumer_wait_within_time_limit) {
 
