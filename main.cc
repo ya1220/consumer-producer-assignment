@@ -167,6 +167,7 @@ void *producer (void *id)
 
     int current_number_of_items_in_buffer = Q.size();
     int job_id = p;   
+    int i = 0;
 
     for (int i = 0; i < current_number_of_items_in_buffer; ++i){
       auto it = find_if(Q.begin(), Q.end(), [&p,&current_number_of_items_in_buffer,&i](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
@@ -198,7 +199,6 @@ void *producer (void *id)
     } while (sem_timedwait( &empty_count, &ts_consumer ) == -1 );
 
       } // for loop ends
-
   pthread_exit(0);  
 }
 
