@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <semaphore.h>
+#include <time.h>
+#include <iostream>
+
+using namespace std;
+
+int main(){
+
+    struct timespec tm;
+    sem_t sem;
+    //int i=0;
+
+    sem_init( &sem, 0, 0);
+
+        clock_gettime(CLOCK_REALTIME, &tm);
+        tm.tv_sec += 5;
+
+cout << "before loop = " << tm.tv_sec << endl;
+
+while ( sem_timedwait( &sem, &tm ) == -1 ){
+        cout << tm.tv_sec << "..";
+}
+
+if ( sem_timedwait( &sem, &tm ) != -1) {cout << "..timed out!!";}
+
+
+    //printf("DONE!!", i);
+    cout << "DONE!!!";
+    return 0;
+}

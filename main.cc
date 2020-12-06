@@ -155,18 +155,9 @@ delete [] temp2;
 
 void *producer (void *id) 
 {
-/*
-(b) Add the required number of jobs to the circular queue, with each job being added once every 1 – 5 seconds. 
-If a job is taken (and deleted) by the consumer, then another job can be produced which has the same id. 
-If the circular queue is full, block while waiting for an empty slot and if a slot doesn’t become
-available after 20 seconds, quit, even though you have not produced all the jobs.
-(d) Quit when there are no more jobs left to produce.
-*/
   int *producer_id = (int*)id;
-  bool wait_within_time_limit = true;
-  cout << "\nStarted producer thread = " <<  *producer_id << endl; // *producer_id;
+  cout << "\nStarted producer thread = " <<  *producer_id << endl; 
   
-  while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
 
     int sleep_time = (rand() % 5) + 1;
@@ -185,42 +176,46 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     job J = job(job_id,duration);
      cout << "..Created job with id = " << job_id << " and duration = " << duration << endl;
 
-    // if queue has space - then add item
-    if (current_number_of_items_in_buffer < queue_size){ 
-      sem_wait(&empty_count);
+    do {
+        clock_gettime(CLOCK_REALTIME, &ts_producer);
+        ts_producer.tv_sec += 1; i++; //cout << "at t = " << i << endl;
+
+      //sem_wait(&empty_count); - REPLACE WITH LOOPED VERSION OF TIMEOUT CHECKER
       sem_wait(&queue_access_mutex);
       
       Q.push_back(J);     // every 5 seconds = already slept
       
       sem_post(&queue_access_mutex);
       sem_post(&full_count);
-  } else{ 
-    ts_producer.tv_sec += 20;     cout << "..producer waiting 20 seconds..";
-    if (sem_timedwait(&empty_count, &ts_producer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
-    cout << "..done waiting..";
-}
 
-std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " seconds" << endl;
-  cout << "Producer("<< *producer_id << "): Job id " << job_id << " duration " << duration << " seconds" << endl;
-ofs.close();
+        std::ofstream ofs("output2.txt", std::ofstream::out);
+          cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " seconds" << endl;
+          cout << "Producer("<< *producer_id << "): Job id " << job_id << " duration " << duration << " seconds" << endl;
+        ofs.close();
+
+        if (i == 20) {sem_post(&empty_count);} // BREAK OUT
+
+    } while (sem_timedwait( &empty_count, &ts_consumer ) == -1 );
+
       } // for loop ends
-  } // while ends
 
-  pthread_exit(0);
-  
+  pthread_exit(0);  
 }
+
 
 void *consumer (void *id) 
 { 
   int *consumer_id = (int*)id;
   job J_copy;
+
+  int i = 0;
+
   cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
 
+    do {
         clock_gettime(CLOCK_REALTIME, &ts_consumer);
-        ts_consumer.tv_sec += 20;
+        ts_consumer.tv_sec += 1; i++; //cout << "at t = " << i << endl;
 
-    while (sem_timedwait(&full_count, &ts_consumer) == -1 ){
 
           sem_wait(&queue_access_mutex);      
               job J = Q.front();
@@ -236,7 +231,12 @@ void *consumer (void *id)
 
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
             ofs.close();
-    } // while 
+
+        if (i == 20) {sem_post(&empty_count);}
+
+    } while (sem_timedwait( &full_count, &ts_consumer ) == -1 );
+
+    cout << "..CONSUMER TIMED OUT!!..";
           std::ofstream ofs("output2.txt", std::ofstream::out);
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
           ofs.close();
