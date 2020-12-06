@@ -101,19 +101,20 @@ pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
 
 vector<int> temp;
-   
+vector<int> temp2;
+
 for(int i = 0; i < number_of_consumers; i++) {
   temp.push_back(i);
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void *)&temp[i]);
 }
 
-temp.clear();
+//temp.clear();
 
 for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
-      temp.push_back(i);
-      pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp[i]);
+      temp2.push_back(i);
+      pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp2[i]);
 }
 
 for(int i = 0; i < number_of_producers; i++ ) {
