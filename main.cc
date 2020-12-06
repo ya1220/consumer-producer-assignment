@@ -97,8 +97,8 @@ sem_init(&empty_count, 0, queue_size); // size of buffer
 sem_init(&full_count, 0, 0);           // 
 sem_init(&queue_access_mutex,0,1);     // 
 
-pthread_t consumer_threads[number_of_consumers];
-pthread_t producer_threads[number_of_producers];
+pthread_t consumer_threads[4];
+pthread_t producer_threads[4];
 
 int* temp;
 int* temp2;
