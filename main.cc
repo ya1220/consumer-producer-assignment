@@ -103,6 +103,8 @@ pthread_t producer_threads[number_of_producers];
 vector<int> temp;
 vector<int> temp2;
 
+cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
+
 for(int i = 0; i < number_of_consumers; i++) {
   temp.push_back(i);
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
