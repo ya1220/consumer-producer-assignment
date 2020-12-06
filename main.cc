@@ -121,7 +121,7 @@ for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
      // temp2.push_back(ii);
   temp2[i] = i;
-      pthread_create(&producer_threads[ii], NULL, consumer, (void*)&temp2[i]);
+      pthread_create(&producer_threads[i], NULL, consumer, (void*)&temp2[i]);
 }
 
 cout << "Created all threads!!!";
