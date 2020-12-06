@@ -100,13 +100,16 @@ sem_init(&queue_access_mutex,0,1);     //
 pthread_t consumer_threads[number_of_consumers];
 pthread_t producer_threads[number_of_producers];
 
-vector<int> temp;
-vector<int> temp2;
+//vector<int> temp;
+//vector<int> temp2;
+
+int[] temp = new int[number_of_consumers];
+int[] temp2 = new int[number_of_producers];
 
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
 for(int i = 0; i < number_of_consumers; i++) {
-  temp.push_back(i);
+  temp[i] = i;
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
   //cout << "temp i = [" << i << "] = " << temp[i] << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void*)&temp[i]);
@@ -114,9 +117,10 @@ for(int i = 0; i < number_of_consumers; i++) {
 
 //temp.clear();
 
-for(int ii = 0; ii < number_of_producers; ii++) {
+for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
-      temp2.push_back(ii);
+     // temp2.push_back(ii);
+  temp2[i] = i;
       pthread_create(&producer_threads[ii], NULL, consumer, (void*)&temp2[ii]);
 }
 
@@ -135,6 +139,9 @@ for(int i = 0; i < number_of_consumers; i++ ) {
  //sem_destroy(&empty_count);
  //sem_destroy(&full_count);
  //sem_destroy(&queue_access_mutex);
+
+delete [] temp;
+delete [] temp2;
 
   return 0;
 }
