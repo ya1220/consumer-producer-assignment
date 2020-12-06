@@ -97,8 +97,8 @@ sem_init(&empty_count, 0, queue_size); // size of buffer
 sem_init(&full_count, 0, 0);           // 
 sem_init(&queue_access_mutex,0,1);     // 
 
-pthread_t consumer_threads[4];
-pthread_t producer_threads[4];
+pthread_t consumer_threads[number_of_consumers];
+pthread_t producer_threads[number_of_producers];
 
 int* temp;
 int* temp2;
@@ -122,7 +122,7 @@ while(i < number_of_consumers) {
 cout << "..Created all consumer threads..";
 
 while(j < number_of_producers) {
-  cout << "\n in producer creation loop - j = " << j << endl;
+ // cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
       r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
       if (r_p == 0){++j;} else {sleep(1);}
