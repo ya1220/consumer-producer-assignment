@@ -122,7 +122,7 @@ for(j = 0; i < number_of_producers; j++) {
       pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
 }
 
-Cout << "..Created all producer threads..";
+cout << "..Created all producer threads..";
 
 cout << "\n\nCreated all threads!!!";
 /*
