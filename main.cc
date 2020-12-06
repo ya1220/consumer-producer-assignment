@@ -116,7 +116,8 @@ cout << "Settings summary: consumers = " << number_of_consumers << " / producers
 while(i < number_of_consumers) {
       temp[i] = i;
       r_c = pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
-      if (r_c == 0){++i;} else {sleep(3);}
+      ++i;
+      //if (r_c == 0){++i;} else {sleep(3);}
 }
 
 cout << "..Created all consumer threads..";
@@ -125,14 +126,15 @@ while(j < number_of_producers) {
  // cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
       r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
-      if (r_p == 0){++j;} else {sleep(3);}
+      ++j;
+      //if (r_p == 0){++j;} else {sleep(3);}
 }
 
 cout << "..Created all producer threads..";
 
 cout << "\n\nCreated all threads!!!";
 
-sleep(5);
+//sleep(5);
 
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
@@ -169,7 +171,6 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 */
  // int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
-
   cout << "\nStarted producer thread = " <<  *((int *)id) << endl; // *producer_id;
   //sleep(5);
   /*
