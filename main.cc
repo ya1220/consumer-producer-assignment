@@ -115,17 +115,14 @@ while(i < number_of_consumers) {
       temp[i] = i;
       r_c = pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
       ++i;
-      //if (r_c == 0){++i;} else {sleep(3);}
 }
 
 cout << "..Created all consumer threads..";
 
 while(j < number_of_producers) {
- // cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
       r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
       ++j;
-      //if (r_p == 0){++j;} else {sleep(3);}
 }
 
 cout << "..Created all producer threads..";
@@ -169,7 +166,6 @@ void *producer (void *id)
 
     int current_number_of_items_in_buffer = Q.size();
     int job_id = p;   
-    //int i = 0;
 
       clock_gettime(CLOCK_REALTIME, &ts_producer);
       ts_producer.tv_sec += 20; //i++; //cout << "at t = " << i << endl;
@@ -215,34 +211,37 @@ void *consumer (void *id)
 
   cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
 
-        clock_gettime(CLOCK_REALTIME, &ts_consumer);
-        ts_consumer.tv_sec += 20; 
+        while (true){
+          clock_gettime(CLOCK_REALTIME, &ts_consumer);
+          ts_consumer.tv_sec += 20; 
 
           consumer_timer_result = sem_timedwait(&full_count, &ts_consumer );
-          if (consumer_timer_result == -1) {
-            std::ofstream ofs("output2.txt", std::ofstream::out);
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out.." << endl;
-            ofs.close();
-            break;
-          }
+          if (consumer_timer_result == -1) {break;}
 
           sem_wait(&queue_access_mutex);      
-              job J = Q.front();
-              J_copy = job(J.id,J.duration);
-              Q.pop_front();
+              if (Q.size() > 0) {
+                job J = Q.front();
+                J_copy = job(J.id,J.duration);
+                Q.pop_front();
+              }
+
           sem_post(&queue_access_mutex);
           sem_post(&empty_count);
 
           std::ofstream ofs("output2.txt", std::ofstream::out);
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
 
           sleep(J.duration);     // Consume
 
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
-            ofs.close();
-
-          std::ofstream ofs("output2.txt", std::ofstream::out);
-            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
+          ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
           ofs.close();
+        }
+
+        if (consumer_timer_result == -1) {
+            std::ofstream ofs("output2.txt", std::ofstream::out);
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
+            ofs.close();
+        }
+
           pthread_exit(0);
 }
