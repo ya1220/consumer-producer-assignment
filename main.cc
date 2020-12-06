@@ -210,11 +210,12 @@ and if not, quit.
     sem_wait(&queue_access_mutex);
 
     job J = Q.front();
-    cout << "got j from deque: " << &J << endl;
-    cout << "got j from deque Duration: " << J.duration << endl;
-    cout << "got j from deque ID: " << J.id << endl;
-
+    job J_coy = (J.id,J.duration);
+    //cout << "got j from deque: " << &J << endl;
+    //cout << "got j from deque Duration: " << J.duration << endl;
+    //cout << "got j from deque ID: " << J.id << endl;
     //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
+
     Q.pop_front();
 
     sem_post(&queue_access_mutex);
@@ -225,8 +226,8 @@ and if not, quit.
     sleep(J.duration);     // Consume
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
-  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " executing sleep duration " << J.duration << endl;
-  cout << "Consumer("<< *consumer_id << "): Job id " << J.id << " completed" << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J_copy.id << " executing sleep duration " << J_copy.duration << endl;
+  cout << "Consumer("<< *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
 ofs.close();
   }
 
