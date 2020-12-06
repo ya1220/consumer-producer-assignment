@@ -162,8 +162,8 @@ available after 20 seconds, quit, even though you have not produced all the jobs
   int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
 
-  cout << "\nStarted producer thread = " << *producer_id;
-  sleep(5);
+  cout << "\nStarted producer thread = " <<  *((int *)id); // *producer_id;
+  //sleep(5);
   /*
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
@@ -219,9 +219,8 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
   int *consumer_id = (int*) id;
   bool consumer_wait_within_time_limit = true;
   job J_copy;
-
-  cout << "\nStarting consumer thread with id = " << *consumer_id;
-  sleep(5);
+  cout << "\nStarting consumer thread with id = " << <<  *((int *)id); // *consumer_id;
+ // sleep(5);
 /*
   while(consumer_wait_within_time_limit) {
 
