@@ -104,12 +104,12 @@ vector<int> temp;
    
 for(int i = 0; i < number_of_consumers; i++) {
   temp.push_back(i);
-  cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
+  //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void *)&temp[i]);
 }
 
 for(int i = 0; i < number_of_producers; i++) {
-    cout << "\nIn main: creating thread in Producer - id = " << i << endl;
+    //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
       pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp[i]);
 }
 
