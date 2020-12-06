@@ -25,7 +25,8 @@
 #include <semaphore.h>
 #include <cstdlib>
 #include <fstream>
-#include <algorithm> 
+#include <algorithm>
+#include <time.h>
 
 void *producer (void *id);
 void *consumer (void *id);
@@ -163,19 +164,19 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     job J = job(job_id,duration);
      cout << "..Created job with id = " << job_id << " and duration = " << duration << endl;
 
-    if (current_number_of_items_in_buffer < queue_size){ // if queue has space - then add item
-
-    sem_wait(&empty_count);
-    sem_wait(&queue_access_mutex);
-    
-    Q.push_back(J);     // every 5 seconds = already slept
-    
-    sem_post(&queue_access_mutex);
-    sem_post(&full_count);
+    // if queue has space - then add item
+    if (current_number_of_items_in_buffer < queue_size){ 
+      sem_wait(&empty_count);
+      sem_wait(&queue_access_mutex);
+      
+      Q.push_back(J);     // every 5 seconds = already slept
+      
+      sem_post(&queue_access_mutex);
+      sem_post(&full_count);
   } else{ 
-    ts_consumer.tv_sec += 20;
-    cout << "..waiting 20 seconds..";
-    if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
+    ts_producer.tv_sec += 20;     cout << "..producer waiting 20 seconds..";
+    if (sem_timedwait(&empty_count, &ts_producer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
+    cout << "..done waiting..";
 }
 
 std::ofstream ofs("output2.txt", std::ofstream::out);
@@ -189,41 +190,61 @@ ofs.close();
 }
 
 void *consumer (void *id) 
-{
-/*
-(b) Take a job from the circular queue - critical
-‘sleep’ for the duration specified. 
-If the circular queue is empty, 
-  block while waiting for jobs and 
-  quit if no jobs arrive within 20 seconds.
-(d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added,
-and if not, quit.
+{ /*
+(b) Take a job from the circular queue - ‘sleep’ for the duration specified. 
+If the circular queue is empty, block while waiting for jobs and quit if no jobs arrive within 20 seconds.
+(d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added, and if not, quit.
 */  
   int *consumer_id = (int *) id;
   bool consumer_wait_within_time_limit = true;
+  job J_copy;
 
-  cout << "\nEntered consumer with id = " << *consumer_id;
+  cout << "\nStarting consumer thread with id = " << *consumer_id;
 
   while(consumer_wait_within_time_limit) {
 
+  /*
+                sem_wait(&full_count);
+    do {
+        clock_gettime(CLOCK_REALTIME, &ts_consumer);
+        ts_consumer.tv_sec += 1;
+        i++;       //  printf("i=%d\n",i);
+        (if Q.size() > 0) {
 
-    // if Q.size() > 0 - enter critical section + take it    
+          sem_wait(&queue_access_mutex);
+              job J = Q.front();
+              J_copy = job(J.id,J.duration);
+              Q.pop_front();
+          // lift
+          // break
+             sleep(J.duration);     // Consume
+        }
+        else{ // if queue empty - 
+          wait for 
+        }
+
+        if (i == 20) {sem_post(&empty_count);}
+    }
+    while (sem_timedwait(&empty_count, &ts_consumer) == -1 );
+   
+  */
+
     sem_wait(&full_count);
     sem_wait(&queue_access_mutex);
 
-    job J = Q.front();
-    job J_copy = job(J.id,J.duration);
-    //cout << "got j from deque: " << &J << endl;
-    //cout << "got j from deque Duration: " << J.duration << endl;
-    //cout << "got j from deque ID: " << J.id << endl;
-    //cout << "Consumer with id = " << *((int*)(id)) << " consuming job from front..";
-
-    Q.pop_front();
+    if (Q.size() > 0){ // if there is something to take
+      job J = Q.front();
+      J_copy = job(J.id,J.duration);
+      Q.pop_front();
+    } else
+    {
+      ts_consumer.tv_sec += 20;     cout << "..consumer waiting 20 seconds..";
+      if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
+      cout << "..done waiting..";
+    }
 
     sem_post(&queue_access_mutex);
     sem_post(&empty_count);
-    // else - timedwait 20 seconds
-    // if not timedwait - break - consumer_wait_within_time_limit = false
 
     sleep(J.duration);     // Consume
 
