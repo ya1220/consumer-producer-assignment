@@ -155,13 +155,13 @@ available after 20 seconds, quit, even though you have not produced all the jobs
     int job_id = p;   
 
     for (int i = 0; i < current_number_of_items_in_buffer; ++i){
-      auto it = find_if(Q.begin(), Q.end(), [&p](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
+      auto it = find_if(Q.begin(), Q.end(), [&p,&current_number_of_items_in_buffer](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
       if (it != Q.end()){job_id = ((p+i) % current_number_of_items_in_buffer);break;}
     }
 
     job J = job(job_id,duration);
      cout << "..Created job with id = " << job_id << " and duration = " << duration << endl;
-     
+
     if (current_number_of_items_in_buffer < queue_size){ // if queue has space - then add item
 
     sem_wait(&empty_count);
