@@ -127,6 +127,8 @@ for(j = 0; j < number_of_producers; j++) {
 cout << "..Created all producer threads..";
 
 cout << "\n\nCreated all threads!!!";
+
+sleep(5);
 /*
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
