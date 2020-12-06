@@ -112,16 +112,14 @@ for(int i = 0; i < number_of_consumers; i++) {
   temp[i] = i;
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
   //cout << "temp i = [" << i << "] = " << temp[i] << endl;
-      pthread_create(&consumer_threads[i], NULL, producer, (void*)&temp[i]);
+      pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
 }
-
-//temp.clear();
 
 for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
      // temp2.push_back(ii);
   temp2[i] = i;
-      pthread_create(&producer_threads[i], NULL, consumer, (void*)&temp2[i]);
+      pthread_create(&producer_threads[i], NULL, producer, (void*)&temp2[i]);
 }
 
 cout << "Created all threads!!!";
