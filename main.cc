@@ -219,7 +219,7 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
   int *consumer_id = (int*) id;
   bool consumer_wait_within_time_limit = true;
   job J_copy;
-  cout << "\nStarting consumer thread with id = " << <<  *((int *)id); // *consumer_id;
+  cout << "\nStarting consumer thread with id = " << *((int *)id); // *consumer_id;
  // sleep(5);
 /*
   while(consumer_wait_within_time_limit) {
