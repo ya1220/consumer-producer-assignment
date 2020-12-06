@@ -108,7 +108,8 @@ cout << "Settings summary: consumers = " << number_of_consumers << " / producers
 for(int i = 0; i < number_of_consumers; i++) {
   temp.push_back(i);
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
-      pthread_create(&consumer_threads[i], NULL, producer, (void *)&temp[i]);
+  cout << "temp i = [" << i << "] = " << temp[i] << endl;
+      pthread_create(&consumer_threads[i], NULL, producer, (void*)&temp[i]);
 }
 
 //temp.clear();
@@ -116,7 +117,7 @@ for(int i = 0; i < number_of_consumers; i++) {
 for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
       temp2.push_back(i);
-      pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp2[i]);
+      pthread_create(&producer_threads[i], NULL, consumer, (void*)&temp2[i]);
 }
 
 for(int i = 0; i < number_of_producers; i++ ) {
@@ -147,10 +148,10 @@ available after 20 seconds, quit, even though you have not produced all the jobs
 (d) Quit when there are no more jobs left to produce.
 */
 
-  int *producer_id = (int *)id;
+  int *producer_id = (int*)id;
   bool wait_within_time_limit = true;
 
-  cout << "\nEntered producer with id = " << *producer_id;
+  cout << "\nStarted producer thread = " << *producer_id;
   
   while (wait_within_time_limit){
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
