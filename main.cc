@@ -103,25 +103,29 @@ pthread_t producer_threads[4];
 int* temp;
 int* temp2;
 
-int i,j;
+int i = 0;
+int j = 0;
+int r_c = 0;
+int r_p = 0;
 
 temp = new (nothrow) int[number_of_consumers];
 temp2 = new (nothrow) int[number_of_producers];
 
 cout << "Settings summary: consumers = " << number_of_consumers << " / producers = " << number_of_producers << " queue_size = " << queue_size << " / number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
-for(i = 0; i < number_of_consumers; i++) {
+while(i < number_of_consumers) {
       temp[i] = i;
-      pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
+      r_c = pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
+      if (r_c == 0){++i;} else {sleep(1);}
 }
 
 cout << "..Created all consumer threads..";
 
-for(j = 0; j < number_of_producers; j++) {
+while(j < number_of_producers) {
   cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
-      pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
-    //  cout << "checkpoint post pthread_create j = " << j << endl;
+      r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
+      if (r_p == 0){++j;} else {sleep(1);}
 }
 
 cout << "..Created all producer threads..";
