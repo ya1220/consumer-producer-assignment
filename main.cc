@@ -116,7 +116,7 @@ cout << "Settings summary: consumers = " << number_of_consumers << " / producers
 while(i < number_of_consumers) {
       temp[i] = i;
       r_c = pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
-      if (r_c == 0){++i;} else {sleep(1);}
+      if (r_c == 0){++i;} else {sleep(3);}
 }
 
 cout << "..Created all consumer threads..";
@@ -125,7 +125,7 @@ while(j < number_of_producers) {
  // cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
       r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
-      if (r_p == 0){++j;} else {sleep(1);}
+      if (r_p == 0){++j;} else {sleep(3);}
 }
 
 cout << "..Created all producer threads..";
