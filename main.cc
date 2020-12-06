@@ -117,7 +117,7 @@ for(i = 0; i < number_of_consumers; i++) {
 
 cout << "..Created all consumer threads..";
 
-for(j = 0; i < number_of_producers; j++) {
+for(j = 0; j < number_of_producers; j++) {
       temp2[i] = j;
       pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
 }
