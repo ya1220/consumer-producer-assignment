@@ -240,7 +240,7 @@ If the circular queue is empty, block while waiting for jobs and quit if no jobs
     } else
     {
       ts_consumer.tv_sec += 20;     cout << "..consumer waiting 20 seconds..";
-      if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
+      if (sem_timedwait(&empty_count, &ts_consumer)!=-1) {consumer_wait_within_time_limit = false; break;}  // 20 seconds
       cout << "..done waiting..";
     }
 
