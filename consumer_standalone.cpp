@@ -27,9 +27,8 @@ void *consumer (void *id)
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
             ofs.close();
 
-
         if (i == 20) {sem_post(&empty_count);}
-        
+
     } while (sem_timedwait( &full_count, &ts_consumer ) == -1 );
 
     cout << "..CONSUMER TIMED OUT!!..";

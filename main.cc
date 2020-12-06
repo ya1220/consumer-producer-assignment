@@ -156,6 +156,8 @@ delete [] temp2;
 void *producer (void *id) 
 {
   int *producer_id = (int*)id;
+  int producer_timer_result = 0;
+  
   cout << "\nStarted producer thread = " <<  *producer_id << endl; 
   
     for(int p = 0;p < number_of_jobs_for_each_producer;p++){
@@ -167,38 +169,39 @@ void *producer (void *id)
 
     int current_number_of_items_in_buffer = Q.size();
     int job_id = p;   
-    int i = 0;
+    //int i = 0;
 
-    for (int i = 0; i < current_number_of_items_in_buffer; ++i){
-      auto it = find_if(Q.begin(), Q.end(), [&p,&current_number_of_items_in_buffer,&i](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
-      if (it != Q.end()){job_id = ((p+i) % current_number_of_items_in_buffer);break;}
-    }
+      clock_gettime(CLOCK_REALTIME, &ts_producer);
+      ts_producer.tv_sec += 20; //i++; //cout << "at t = " << i << endl;
 
-    job J = job(job_id,duration);
-     cout << "..Created job with id = " << job_id << " and duration = " << duration << endl;
-
-    do {
-        clock_gettime(CLOCK_REALTIME, &ts_producer);
-        ts_producer.tv_sec += 1; i++; //cout << "at t = " << i << endl;
-
-      //sem_wait(&empty_count); - REPLACE WITH LOOPED VERSION OF TIMEOUT CHECKER
-      sem_wait(&queue_access_mutex);
+      producer_timer_result = sem_timedwait(&empty_count,&ts_producer);
       
-      Q.push_back(J);     // every 5 seconds = already slept
+      if (producer_timer_result == -1){
+        std::ofstream ofs("output2.txt", std::ofstream::out);
+          cout << "Producer("<< *producer_id << "): Job id " << job_id << " timed out" << endl;
+        ofs.close();
+      break;
+      }       // if timer times out - break
+      
+      sem_wait(&queue_access_mutex);
+
+        for (int i = 0; i < current_number_of_items_in_buffer; ++i){
+          auto it = find_if(Q.begin(), Q.end(), [&p,&current_number_of_items_in_buffer,&i](const job& obj) {return obj.id == ((p+i) % current_number_of_items_in_buffer);});
+          if (it != Q.end()){job_id = ((p+i) % current_number_of_items_in_buffer);break;}
+        }
+
+        job J = job(job_id,duration);
+
+        Q.push_back(J);     // every 5 seconds = already slept
       
       sem_post(&queue_access_mutex);
       sem_post(&full_count);
 
         std::ofstream ofs("output2.txt", std::ofstream::out);
-          cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " seconds" << endl;
-          cout << "Producer("<< *producer_id << "): Job id " << job_id << " duration " << duration << " seconds" << endl;
+          cout << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration;
         ofs.close();
-
-        if (i == 20) {sem_post(&empty_count);} // BREAK OUT
-
-    } while (sem_timedwait( &empty_count, &ts_consumer ) == -1 );
-
       } // for loop ends
+
   pthread_exit(0);  
 }
 
@@ -208,14 +211,20 @@ void *consumer (void *id)
   int *consumer_id = (int*)id;
   job J_copy;
 
-  int i = 0;
+  int consumer_timer_result = 0;
 
   cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
 
-    do {
         clock_gettime(CLOCK_REALTIME, &ts_consumer);
-        ts_consumer.tv_sec += 1; i++; //cout << "at t = " << i << endl;
+        ts_consumer.tv_sec += 20; 
 
+          consumer_timer_result = sem_timedwait(&full_count, &ts_consumer );
+          if (consumer_timer_result == -1) {
+            std::ofstream ofs("output2.txt", std::ofstream::out);
+            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out.." << endl;
+            ofs.close();
+            break;
+          }
 
           sem_wait(&queue_access_mutex);      
               job J = Q.front();
@@ -232,11 +241,6 @@ void *consumer (void *id)
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
             ofs.close();
 
-        if (i == 20) {sem_post(&empty_count);}
-
-    } while (sem_timedwait( &full_count, &ts_consumer ) == -1 );
-
-    cout << "..CONSUMER TIMED OUT!!..";
           std::ofstream ofs("output2.txt", std::ofstream::out);
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
           ofs.close();

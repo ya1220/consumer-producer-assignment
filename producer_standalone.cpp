@@ -42,11 +42,6 @@ void *producer (void *id)
 
     } while (sem_timedwait( &empty_count, &ts_consumer ) == -1 );
 
-/*
-    ts_producer.tv_sec += 20;     cout << "..producer waiting 20 seconds..";
-    if (sem_timedwait(&empty_count, &ts_producer)!=-1) {wait_within_time_limit = false; break;}  // 20 seconds
-    cout << "..done waiting..";
-*/
       } // for loop ends
 
   pthread_exit(0);  
