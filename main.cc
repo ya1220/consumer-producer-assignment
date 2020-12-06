@@ -235,7 +235,7 @@ void *consumer (void *id)
           sleep(J.duration);     // Consume
 
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " completed" << endl;
-            ofstream.close();
+            ofs.close();
     } // while 
           std::ofstream ofs("output2.txt", std::ofstream::out);
             ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;  
