@@ -108,20 +108,20 @@ cout << "Settings summary: consumers = " << number_of_consumers << " / producers
 for(int i = 0; i < number_of_consumers; i++) {
   temp.push_back(i);
   //cout << "\nIn main: creating thread in Consumer - id = " << i << endl;
-  cout << "temp i = [" << i << "] = " << temp[i] << endl;
+  //cout << "temp i = [" << i << "] = " << temp[i] << endl;
       pthread_create(&consumer_threads[i], NULL, producer, (void*)&temp[i]);
 }
 
 //temp.clear();
 
-for(int i = 0; i < number_of_producers; i++) {
+for(int ii = 0; ii < number_of_producers; ii++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
-      temp2.push_back(i);
-      pthread_create(&producer_threads[i], NULL, consumer, (void*)&temp2[i]);
+      temp2.push_back(ii);
+      pthread_create(&producer_threads[ii], NULL, consumer, (void*)&temp2[ii]);
 }
 
 cout << "Created all threads!!!";
-
+/*
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
 }
@@ -129,7 +129,7 @@ for(int i = 0; i < number_of_producers; i++ ) {
 for(int i = 0; i < number_of_consumers; i++ ) {
       pthread_join(consumer_threads[i],NULL); // Line 7
 }
-
+*/
  //pthread_exit(NULL);
 
  //sem_destroy(&empty_count);
@@ -206,7 +206,7 @@ void *consumer (void *id)
 If the circular queue is empty, block while waiting for jobs and quit if no jobs arrive within 20 seconds.
 (d) If there are no jobs left to consume, wait for 20 seconds to check if any new jobs are added, and if not, quit.
 */  
-  int *consumer_id = (int *) id;
+  int *consumer_id = (int*) id;
   bool consumer_wait_within_time_limit = true;
   job J_copy;
 
