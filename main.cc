@@ -108,8 +108,11 @@ for(int i = 0; i < number_of_consumers; i++) {
       pthread_create(&consumer_threads[i], NULL, producer, (void *)&temp[i]);
 }
 
+temp.clear();
+
 for(int i = 0; i < number_of_producers; i++) {
     //cout << "\nIn main: creating thread in Producer - id = " << i << endl;
+      temp.push_back(i);
       pthread_create(&producer_threads[i], NULL, consumer, (void *)&temp[i]);
 }
 
