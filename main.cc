@@ -133,7 +133,7 @@ cout << "..Created all producer threads..";
 cout << "\n\nCreated all threads!!!";
 
 sleep(5);
-/*
+
 for(int i = 0; i < number_of_producers; i++ ) {
       pthread_join(producer_threads[i],NULL); // Line 8
 }
@@ -141,7 +141,10 @@ for(int i = 0; i < number_of_producers; i++ ) {
 for(int i = 0; i < number_of_consumers; i++ ) {
       pthread_join(consumer_threads[i],NULL); // Line 7
 }
-*/
+
+cout << "Joined all threads!!!\n";
+
+cout << "..Cleanup starts..";
  //pthread_exit(NULL);
 
  //sem_destroy(&empty_count);
