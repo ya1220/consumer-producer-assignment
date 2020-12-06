@@ -103,8 +103,8 @@ int* temp2;
 
 int i = 0;
 int j = 0;
-int r_c = 0;
-int r_p = 0;
+//int r_c = 0;
+//int r_p = 0;
 
 temp = new (nothrow) int[number_of_consumers];
 temp2 = new (nothrow) int[number_of_producers];
@@ -113,7 +113,8 @@ cout << "Settings summary: consumers = " << number_of_consumers << " / producers
 
 while(i < number_of_consumers) {
       temp[i] = i;
-      r_c = pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
+      //r_c = 
+      pthread_create(&consumer_threads[i], NULL, consumer, (void*)&temp[i]);
       ++i;
 }
 
@@ -121,7 +122,8 @@ cout << "..Created all consumer threads..";
 
 while(j < number_of_producers) {
       temp2[j] = j;
-      r_p = pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
+      //r_p = 
+      pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
       ++j;
 }
 
