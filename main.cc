@@ -118,7 +118,7 @@ for(i = 0; i < number_of_consumers; i++) {
 cout << "..Created all consumer threads..";
 
 for(j = 0; j < number_of_producers; j++) {
-  cout << " j = " << j << endl;
+  cout << "\n in producer creation loop - j = " << j << endl;
       temp2[j] = j;
       pthread_create(&producer_threads[j], NULL, producer, (void*)&temp2[j]);
     //  cout << "checkpoint post pthread_create j = " << j << endl;
