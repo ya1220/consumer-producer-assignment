@@ -2,6 +2,9 @@
  * The Main program with the two functions. A simple
  * example of creating and using a thread is provided.
  ******************************************************************/
+//#include "helper.h"
+//////////////////////////////////////////////
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,9 +20,6 @@
 #include <pthread.h>
 #include <ctype.h>
 #include <iostream>
-
-//#include "helper.h"
-//////////////////////////////////////////////
 
 #include <deque>
 #include <vector>
@@ -56,7 +56,6 @@ struct job
 std::deque<job> Q;
 
 using namespace std;
-//////////////////////////////////////////////
 
 
 int main(int argc, char *argv[])
@@ -71,6 +70,8 @@ int main(int argc, char *argv[])
   std::size_t pos;
   std::string arg = argv[1];
 
+  queue_size = check_arg (argv[1]);
+
   try
   {
     queue_size = std::stoi(arg, &pos);
@@ -81,7 +82,7 @@ int main(int argc, char *argv[])
   }
   catch (std::invalid_argument const &ex)
   {
-    std::cerr << "Invalid number: " << arg << '\n';
+    std::cerr << "Invalid number entered: " << arg << '\n';
   }
   catch (std::out_of_range const &ex)
   {
@@ -100,7 +101,7 @@ int main(int argc, char *argv[])
   }
   catch (std::invalid_argument const &ex)
   {
-    std::cerr << "Invalid number: " << arg << '\n';
+    std::cerr << "Invalid number entered: " << arg << '\n';
   }
   catch (std::out_of_range const &ex)
   {
@@ -120,14 +121,13 @@ int main(int argc, char *argv[])
   }
   catch (std::invalid_argument const &ex)
   {
-    std::cerr << "Invalid number: " << arg << '\n';
+    std::cerr << "Invalid number entered: " << arg << '\n';
   }
   catch (std::out_of_range const &ex)
   {
     std::cerr << "Number out of range: " << arg << '\n';
   }
 
-  //number_of_producers = std::stoi(arg, &pos);
   arg = argv[4];
 
   try
@@ -140,11 +140,11 @@ int main(int argc, char *argv[])
   }
   catch (std::invalid_argument const &ex)
   {
-    std::cerr << "Invalid number: " << arg << '\n';
+    std::cerr << "Invalid number entered: " << arg << '\n';
   }
   catch (std::out_of_range const &ex)
   {
-    std::cerr << "Number out of range: " << arg << '\n';
+    std::cerr << "Number is out of range: " << arg << '\n';
   }
 
   sem_init(&empty_count, 0, queue_size); // size of buffer
@@ -219,7 +219,6 @@ void *producer(void *id)
 
   for (int p = 0; p < number_of_jobs_for_each_producer; p++)
   {
-
     int sleep_time = (rand() % 5) + 1;
     int duration = (rand() % 10) + 1; // Duration for each job should be between 1 – 10 seconds.
 
@@ -235,10 +234,7 @@ void *producer(void *id)
 
     if (producer_timer_result == -1)
     {
-      //   std::ofstream ofs("output2.txt", std::ofstream::out);
-      //   ofs << "Producer("<< *producer_id << "): Job id " << job_id << " timed out" << endl;
       cout << "Producer(" << *producer_id << "): Job id " << job_id << " timed out" << endl;
-      // ofs.close();
       break;
     } // if timer times out - break
 
@@ -257,15 +253,12 @@ void *producer(void *id)
     job J = job(job_id, duration);
 
     Q.push_back(J); // every 5 seconds = already slept
+    cout << "Producer(" << *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
 
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
 
-    //  std::ofstream ofs("output2.txt", std::ofstream::out);
-    //  ofs << "Producer("<< *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
-    cout << "Producer(" << *producer_id << "): Job id " << job_id << " sleeping for " << sleep_time << " and produced job with duration = " << duration << endl;
-    // ofs.close();
-  } // for loop ends
+   } // for loop ends
 
   pthread_exit(0);
 }
@@ -276,7 +269,6 @@ void *consumer(void *id)
 {
   int *consumer_id = (int *)id;
   job J_copy;
-
   int consumer_timer_result = 0;
 
   cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
@@ -299,27 +291,19 @@ void *consumer(void *id)
       job J = Q.front();
       J_copy = job(J.id, J.duration);
       Q.pop_front();
+      cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << "...";
     }
 
     sem_post(&queue_access_mutex);
     sem_post(&empty_count);
 
-    //          std::ofstream ofs("output2.txt", std::ofstream::out);
-    //            ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << endl;
-    cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << "...";
     sleep(J_copy.duration); // Consume
-
-    //          ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
     cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " consumption done.." << endl;
-    //        ofs.close();
   }
 
   if (consumer_timer_result == -1)
   {
-    //        std::ofstream ofs("output2.txt", std::ofstream::out);
-    //      ofs << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;
     cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " timed out waiting" << endl;
-    //    ofs.close();
   }
 
   pthread_exit(0);
