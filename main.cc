@@ -29,6 +29,8 @@
 #include <algorithm>
 #include <time.h>
 
+#include "helper.h"
+
 void *producer(void *id);
 void *consumer(void *id);
 
