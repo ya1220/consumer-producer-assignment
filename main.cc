@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  std::size_t pos;
-  std::string arg = argv[1];
+  //std::size_t pos;
+  //std::string arg = argv[1];
 
   queue_size = check_arg (argv[1]);
   number_of_jobs_for_each_producer = check_arg (argv[2]);
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
     std::cerr << "Number is out of range: " << arg << '\n';
   }
 */
-  
+
   sem_init(&empty_count, 0, queue_size); // size of buffer
   sem_init(&full_count, 0, 0);           //
   sem_init(&queue_access_mutex, 0, 1);   //
