@@ -73,7 +73,11 @@ int main(int argc, char *argv[])
   std::string arg = argv[1];
 
   queue_size = check_arg (argv[1]);
+  number_of_jobs_for_each_producer = check_arg (argv[2]);
+  number_of_producers =check_arg (argv[3]);
+  number_of_consumers = check_arg (argv[4]);
 
+/*
   try
   {
     queue_size = std::stoi(arg, &pos);
@@ -148,7 +152,8 @@ int main(int argc, char *argv[])
   {
     std::cerr << "Number is out of range: " << arg << '\n';
   }
-
+*/
+  
   sem_init(&empty_count, 0, queue_size); // size of buffer
   sem_init(&full_count, 0, 0);           //
   sem_init(&queue_access_mutex, 0, 1);   //
