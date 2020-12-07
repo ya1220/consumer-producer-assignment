@@ -222,7 +222,7 @@ void *producer(void *id)
   int *producer_id = (int *)id;
   int producer_timer_result = 0;
 
-  cout << "\nStarted producer thread = " << *producer_id << endl;
+  //cout << "\nStarted producer thread = " << *producer_id << endl;
 
   for (int p = 0; p < number_of_jobs_for_each_producer; p++)
   {
@@ -278,7 +278,7 @@ void *consumer(void *id)
   job J_copy;
   int consumer_timer_result = 0;
 
-  cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
+  //cout << "\nStarting consumer thread with id = " << *consumer_id << endl; // *consumer_id;
 
   while (true)
   {
@@ -298,7 +298,7 @@ void *consumer(void *id)
       job J = Q.front();
       J_copy = job(J.id, J.duration);
       Q.pop_front();
-      cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for duration = " << J_copy.duration << "...";
+      cout << "Consumer(" << *consumer_id << "): Job id " << J_copy.id << " grabbed item..about to consume for t = " << J_copy.duration << "..items left in queue = " << Q.size() << endl;
     }
 
     sem_post(&queue_access_mutex);
