@@ -173,7 +173,7 @@ void *producer(void *id)
 
     if (producer_timer_result == -1)    // sem_timedwait returns -1 if timed out. Exit if -1 is returned
     {
-      msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + " timed out" + "\n";
+      msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(p) + " timed out waiting for space in buffer" + "\n";
       cout << msg_str;      
       break; // if timer times out - break
     } 
@@ -203,6 +203,10 @@ void *producer(void *id)
     // Exit critical section
 
    } // for loop ends
+
+   msg_str = " Producer(" + to_string(*producer_id) + "): has produced all(" + to_string(number_of_jobs_for_each_producer) + ") jobs..exiting thread..\n";
+   cout << msg_str;      
+
 
   pthread_exit(0);  // exit thread
 }
