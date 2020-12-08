@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
   temp2 = new (nothrow) int[number_of_producers];
 
   // Summarize settings entered
-  cout << "Entered: consumers = " << number_of_consumers << " | producers = " << number_of_producers << " | queue_size = " << queue_size << " | number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
+  cout << "\nEntered: consumers = " << number_of_consumers << " | producers = " << number_of_producers << " | queue_size = " << queue_size << " | number_of_jobs_for_each_producer = " << number_of_jobs_for_each_producer << endl;
 
   // Loop from 0 to number of consumers and create threads
   while (i < number_of_consumers)
