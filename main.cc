@@ -148,11 +148,11 @@ void *producer(void *id)
     int sleep_time = (rand() % 5) + 1;  // Generate random sleep time between 1-5 seconds
     int duration = (rand() % 10) + 1;   // Generate random sleep time for each job - between 1-10 seconds
 
-    cout << "Producer(" << *producer_id << ") about to go to sleep for " << sleep_time << " seconds.." endl;
+    cout << "Producer(" << *producer_id << ") about to go to sleep for " << sleep_time << " seconds.." << endl;
 
     sleep(sleep_time);                  // Sleep
 
-    cout << "Producer(" << *producer_id << "): Job id " << job_id << "woke up.." << endl;
+    cout << "Producer(" << *producer_id << ") woke up.." << endl;
 
     int current_number_of_items_in_buffer = Q.size(); 
     int job_id = p;                      // Set job id to current producer loop iteration
