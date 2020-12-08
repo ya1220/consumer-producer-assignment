@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
   delete[] temp;
   delete[] temp2;
 
-  cout << "..exiting..";
+  cout << "..exiting..\n";
   return 0;
 }
 
