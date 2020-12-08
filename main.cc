@@ -150,7 +150,7 @@ void *producer(void *id)
     int sleep_time = (rand() % 5) + 1;  // Generate random sleep time between 1-5 seconds
     int duration = (rand() % 10) + 1;   // Generate random sleep time for each job - between 1-10 seconds
 
-    msg_str = " Producer(" + to_string(*producer_id) + ") about to go to sleep for " + to_string(sleep_time) + " seconds.." + "\n";
+    msg_str = " Producer(" + to_string(*producer_id) + "): about to go to sleep for " + to_string(sleep_time) + " seconds.." + "\n";
     cout << msg_str; 
 
     sleep(sleep_time);                  // Sleep
