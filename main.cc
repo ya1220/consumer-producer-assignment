@@ -141,7 +141,10 @@ void *producer(void *id)
   int *producer_id = (int *)id; // give the thread an id from loop which created the thread
   int producer_timer_result = 0;  // timer variable based on the 20-second timed wait. If this times out value becomes -1
   
-  cout << "\nStarted producer thread = " << *producer_id << endl;
+  string msg_str;
+  msg_str = "Started producer thread = " + to_string(*producer_id);
+
+  cout << msg_str;
 
   for (int p = 0; p < number_of_jobs_for_each_producer; p++)  // Loop through 0 to number of jobs for each producer
   {
