@@ -142,8 +142,7 @@ void *producer(void *id)
   int producer_timer_result = 0;  // timer variable based on the 20-second timed wait. If this times out value becomes -1
   
   string msg_str;
-  msg_str = " Started producer thread = " + to_string(*producer_id);
-  cout << "\n";
+  msg_str = " Started producer thread = " + to_string(*producer_id) + "\n";
   cout << msg_str;
 
   for (int p = 0; p < number_of_jobs_for_each_producer; p++)  // Loop through 0 to number of jobs for each producer
@@ -151,19 +150,19 @@ void *producer(void *id)
     int sleep_time = (rand() % 5) + 1;  // Generate random sleep time between 1-5 seconds
     int duration = (rand() % 10) + 1;   // Generate random sleep time for each job - between 1-10 seconds
 
-    msg_str = " Producer(" + to_string(*producer_id) + ") about to go to sleep for " + to_string(sleep_time) + " seconds..";
-    cout << msg_str << endl; 
+    msg_str = " Producer(" + to_string(*producer_id) + ") about to go to sleep for " + to_string(sleep_time) + " seconds.." + "\n";
+    cout << msg_str; 
 
     sleep(sleep_time);                  // Sleep
 
-    msg_str = " Producer(" + to_string(*producer_id) + ") woke up.."; 
-    cout << msg_str << endl;
+    msg_str = " Producer(" + to_string(*producer_id) + "): woke up.." + "\n"; 
+    cout << msg_str;
 
     int current_number_of_items_in_buffer = Q.size(); 
     int job_id = p;                      // Set job id to current producer loop iteration
 
-    msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + "..current number of jobs in buffer = " + to_string(current_number_of_items_in_buffer); 
-    cout << msg_str << endl;
+    msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + "..current number of jobs in buffer = " + to_string(current_number_of_items_in_buffer) + "\n"; 
+    cout << msg_str;
 
     // Set the timer starting point
     clock_gettime(CLOCK_REALTIME, &ts_producer);
@@ -174,8 +173,8 @@ void *producer(void *id)
 
     if (producer_timer_result == -1)    // sem_timedwait returns -1 if timed out. Exit if -1 is returned
     {
-      msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + " timed out";
-      cout << msg_str << endl;      
+      msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + " timed out" + "\n";
+      cout << msg_str;      
       break; // if timer times out - break
     } 
 
@@ -196,8 +195,8 @@ void *producer(void *id)
 
     Q.push_back(J); // Add job to queue
 
-    msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + " sleeping for " + to_string(sleep_time) + " and produced job with duration = " + to_string(duration);
-    cout << msg_str << endl;      
+    msg_str = " Producer(" + to_string(*producer_id) + "): Job id " + to_string(job_id) + " sleeping for " + to_string(sleep_time) + " and produced job with duration = " + to_string(duration) + "\n";
+    cout << msg_str;      
 
     sem_post(&queue_access_mutex);
     sem_post(&full_count);
@@ -217,8 +216,8 @@ void *consumer(void *id)
   int consumer_timer_result = 0;  // timer variable to check if no timeout has occured during wait. Set to -1 if 20-second timeout reached
   string msg_str;                 // for output to screen
 
-  msg_str = " Starting consumer thread = " + to_string(*consumer_id);
-  cout << msg_str << endl; 
+  msg_str = " Starting consumer thread = " + to_string(*consumer_id) + "\n";
+  cout << msg_str; 
 
   while (true)                    // Consumer loops until broken out by the timeout loop
   {
@@ -241,8 +240,8 @@ void *consumer(void *id)
       J_copy = job(J.id, J.duration);
       Q.pop_front();
 
-      msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " grabbed item..about to consume for t = " + to_string(J_copy.duration) + "..items left in queue = " + to_string(Q.size());
-      cout << msg_str << endl;
+      msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " grabbed item..about to consume for t = " + to_string(J_copy.duration) + "..items left in queue = " + to_string(Q.size()) + "\n";
+      cout << msg_str;
     }
 
     sem_post(&queue_access_mutex);
@@ -251,14 +250,14 @@ void *consumer(void *id)
 
     sleep(J_copy.duration);         // Consume the job which was grabbed in critical section
  
-    msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " consumption done..";
-    cout << msg_str << endl;
+    msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " consumption done.." + "\n";
+    cout << msg_str;
   } // while true loop ends
 
   if (consumer_timer_result == -1)  // Code arrives here if timer result is -1 - the code has timed out
   {
-    msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " timed out waiting..exiting thread..";
-    cout << msg_str << endl;
+    msg_str = " Consumer(" + to_string(*consumer_id) + "): Job id " + to_string(J_copy.id) + " timed out waiting..exiting thread.." + "\n";
+    cout << msg_str;
   }
 
   pthread_exit(0);  // exit thread
